@@ -1,0 +1,67 @@
+﻿@model DataModels.ApplicationUser
+@{
+    ViewData["Title"] = "EditRoles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>EditRoles for @Model.UserName</h3>
+
+@if (Model.UserRoles != null)
+{
+    <div>
+        @foreach (var userRole in Model.UserRoles)
+        {
+            <li>
+                @userRole.Role.Name
+            </li>
+        }
+
+    </div>
+}
+else
+{
+    <p>This user does not have any roles asigned.</p>
+}
+
+
+<h4>
+    Possible roles
+</h4>
+
+<div>
+    @foreach (var item in (IEnumerable<DataModels.ApplicationRole>)ViewData["Roles"])
+    {
+        <li class="row justify-content-between"><span>@item.Name</span> <span><button class="btn btn-primary addRole" data-userId="@Model.Id" data-role="@item.Name">Add</button></span></li>
+    }
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $(".addRole").on("click", function () {
+                const userId = this.getAttribute("data-userId");
+                const roleName = this.getAttribute("data-role");
+
+                console.log(userId, roleName);
+
+                $.ajax({
+                    url: "/Administration/AssignUserToRole",
+                    method: "POST",
+                    data: {
+                        userId,
+                        roleName
+                    }
+                }).done((data) => {
+                    console.log(data)
+                }).fail((data) => {
+                    console.error(data)
+                })
+
+
+
+            })
+        });
+    </script>
+}
