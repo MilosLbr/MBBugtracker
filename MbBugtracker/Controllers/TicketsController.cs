@@ -11,6 +11,7 @@ using MbBugtracker.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using Microsoft.VisualBasic;
 
 namespace MbBugtracker.Controllers
 {
@@ -70,6 +71,8 @@ namespace MbBugtracker.Controllers
             {
                 var userId = _userManager.GetUserId(User);
                 ticket.ApplicationUserId = userId;
+                ticket.CreatedOn = DateTime.Now;
+                ticket.UpdatedOn = DateTime.Now;
 
                 var ticketToAdd = _mapper.Map<TicketCreateViewModel, Ticket>(ticket);
 
@@ -94,7 +97,9 @@ namespace MbBugtracker.Controllers
             {
                 return NotFound();
             }
-            return View(ticket);
+
+            var ticketViewModel = _mapper.Map<TicketEditViewModel>(ticket);
+            return View(ticketViewModel);
         }
 
         // POST: Tickets/Edit/5
@@ -102,23 +107,26 @@ namespace MbBugtracker.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Developer,Submiter,ProjectName,Priority,Status,Type,CreatedOn,UpdatedOn")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id,  TicketEditViewModel ticketViewModel)
         {
-            if (id != ticket.Id)
+            if (id != ticketViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                var ticketToUpdate = _context.Tickets.Find(ticketViewModel.Id);
                 try
                 {
-                    _context.Update(ticket);
+                    _mapper.Map(ticketViewModel, ticketToUpdate);
+                    ticketToUpdate.UpdatedOn = DateTime.Now;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TicketExists(ticket.Id))
+                    if (!TicketExists(ticketViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -129,7 +137,7 @@ namespace MbBugtracker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(ticket);
+            return View(ticketViewModel);
         }
 
         // GET: Tickets/Delete/5

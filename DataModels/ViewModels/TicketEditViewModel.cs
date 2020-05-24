@@ -1,13 +1,11 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace DataModels.ViewModels
 {
-    public class TicketCreateViewModel
+    public class TicketEditViewModel
     {
         [Required]
         public int Id { get; set; }
@@ -16,7 +14,7 @@ namespace DataModels.ViewModels
         [Required]
         public string Description { get; set; }
         [Required]
-        [Display(Name="Project Name")]
+        [Display(Name = "Project Name")]
         public string ProjectName { get; set; }
         [Required]
         public string Priority { get; set; }
@@ -28,8 +26,5 @@ namespace DataModels.ViewModels
         public DateTime CreatedOn { get; set; }
         [Required]
         public DateTime UpdatedOn { get; set; }
-        
-        public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
     }
 }
