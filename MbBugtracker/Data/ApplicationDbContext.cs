@@ -61,6 +61,15 @@ namespace MbBugtracker.Data
                     .IsRequired();
             });
 
+            modelBuilder.Entity<Ticket>(b =>
+            {
+                b.HasOne(t => t.ApplicationUser)
+                    .WithMany(au => au.Tickets)
+                    .HasForeignKey(t => t.ApplicationUserId)
+                    .IsRequired();
+            });
+
+
         }
     }
 }

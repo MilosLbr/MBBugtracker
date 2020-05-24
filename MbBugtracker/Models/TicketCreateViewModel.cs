@@ -1,27 +1,34 @@
-﻿using Microsoft.VisualBasic;
+﻿using DataModels;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace DataModels
+namespace MbBugtracker.Models
 {
-    public class Ticket 
+    public class TicketCreateViewModel
     {
-        // title, desc, submiter, project, priority, status, type, created updated
-
+        [Required]
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
+        [Display(Name="Project Name")]
         public string ProjectName { get; set; }
+        [Required]
         public string Priority { get; set; }
+        [Required]
         public string Status { get; set; }
+        [Required]
         public string Type { get; set; }
+        [Required]
         public DateTime CreatedOn { get; set; }
+        [Required]
         public DateTime UpdatedOn { get; set; }
-
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        
         public string ApplicationUserId { get; set; }
-
     }
 }
