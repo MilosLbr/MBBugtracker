@@ -47,8 +47,15 @@
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="AssignedTo" class="control-label"></label>
+                @Html.DropDownListFor(m => m.AssignedTo, new SelectList(Model.AllAppUsers, "UserName", "UserName"), null, new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+
+
         </form>
     </div>
 </div>

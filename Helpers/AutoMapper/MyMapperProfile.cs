@@ -11,12 +11,13 @@ namespace Helpers.AutoMapper
     {
         public MyMapperProfile()
         {
-            CreateMap<Ticket, TicketCreateViewModel>();
-            CreateMap<TicketCreateViewModel, Ticket>();
+            CreateMap<Ticket, TicketCreateViewModel>().ReverseMap();
 
             CreateMap<Ticket, TicketEditViewModel>().ReverseMap();
 
             CreateMap<Ticket, TicketListViewModel>();
+
+            CreateMap<Ticket, TicketDetailsViewModel>();
         }
     }
 }

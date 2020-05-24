@@ -62,13 +62,29 @@ namespace MbBugtracker.Controllers
                 return NotFound();
             }
 
-            return View(ticket);
+            var ticketViewModel = _mapper.Map<TicketDetailsViewModel>(ticket);
+            if(ticketViewModel.UpdatedByUserId != null)
+            {
+                var user = await _userManager.FindByIdAsync(ticketViewModel.UpdatedByUserId);
+
+                var updatedByUserName = user.UserName;
+
+                ticketViewModel.UpdatedByUserName = updatedByUserName;
+            }
+
+            return View(ticketViewModel);
         }
 
         // GET: Tickets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var viewModel = new TicketCreateViewModel();
+            
+            var allUsers = await _context.Users.ToListAsync();
+            var viewModel = new TicketCreateViewModel()
+            {
+                AllAppUsers = allUsers
+            };
+
             return View(viewModel);
         }
 
@@ -110,8 +126,10 @@ namespace MbBugtracker.Controllers
             {
                 return NotFound();
             }
-
+            var allUsers = _context.Users.ToList();
             var ticketViewModel = _mapper.Map<TicketEditViewModel>(ticket);
+            ticketViewModel.AllAppUsers = allUsers;
+
             return View(ticketViewModel);
         }
 

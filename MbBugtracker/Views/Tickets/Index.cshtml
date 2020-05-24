@@ -17,9 +17,6 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.ProjectName)
             </th>
             <th>
@@ -43,6 +40,9 @@
             <th>
                 Edited By
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignedTo)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -51,9 +51,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectName)
@@ -78,6 +75,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UpdatedByUserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignedTo)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

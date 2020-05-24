@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,12 @@ namespace DataModels.ViewModels
 
 
         public string UpdatedByUserId { get; set; }
+
+        [Display(Name ="Updated by")]
         public string UpdatedByUserName { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+
+        [Display(Name = "Assigned to")]
+        public string AssignedTo { get; set; }
     }
 }

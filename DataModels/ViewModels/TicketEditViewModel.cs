@@ -26,5 +26,9 @@ namespace DataModels.ViewModels
         public DateTime CreatedOn { get; set; }
         [Required]
         public DateTime UpdatedOn { get; set; }
+        public IEnumerable<ApplicationUser> AllAppUsers { get; set; }
+
+        [Display(Name ="Assigned to")]
+        public string AssignedTo { get; set; }
     }
 }
