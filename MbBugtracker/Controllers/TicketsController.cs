@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataModels;
+using DataModels.ViewModels;
 using MbBugtracker.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using MbBugtracker.Models;
+using AutoMapper;
 
 namespace MbBugtracker.Controllers
 {
@@ -17,11 +18,13 @@ namespace MbBugtracker.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public TicketsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public TicketsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         // GET: Tickets
@@ -66,23 +69,13 @@ namespace MbBugtracker.Controllers
             if (ModelState.IsValid)
             {
                 var userId = _userManager.GetUserId(User);
+                ticket.ApplicationUserId = userId;
 
-                var ticketToAdd = new Ticket()
-                {
-                    Title = ticket.Title,
-                    Description = ticket.Description,
-                    ProjectName = ticket.ProjectName,
-                    Priority = ticket.Priority,
-                    Status = ticket.Status,
-                    Type = ticket.Type,
-                    ApplicationUserId = userId,
-                    CreatedOn = DateTime.Now,
-                    UpdatedOn = DateTime.Now,
-
-                };
+                var ticketToAdd = _mapper.Map<TicketCreateViewModel, Ticket>(ticket);
 
                 _context.Add(ticketToAdd);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(ticket);
