@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataModels;
 using DataModels.ViewModels;
 using MbBugtracker.Data;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using Microsoft.VisualBasic;
 
 namespace MbBugtracker.Controllers
 {
@@ -31,7 +28,23 @@ namespace MbBugtracker.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tickets.ToListAsync());
+            var tickets = await _context.Tickets.ToListAsync();
+
+            var ticketList = _mapper.Map<List<TicketListViewModel>>(tickets);
+
+            foreach (var ticket in ticketList)
+            {
+                var updatedByUserId = ticket.UpdatedByUserId;
+                if(updatedByUserId != null)
+                {
+                    var user = await _userManager.FindByIdAsync(updatedByUserId);
+                    var userName = user.UserName;
+
+                    ticket.UpdatedByUserName = userName;
+                }
+            }
+
+            return View(ticketList);
         }
 
         // GET: Tickets/Details/5
@@ -109,6 +122,8 @@ namespace MbBugtracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,  TicketEditViewModel ticketViewModel)
         {
+            var userId = _userManager.GetUserId(User);
+
             if (id != ticketViewModel.Id)
             {
                 return NotFound();
@@ -121,6 +136,7 @@ namespace MbBugtracker.Controllers
                 {
                     _mapper.Map(ticketViewModel, ticketToUpdate);
                     ticketToUpdate.UpdatedOn = DateTime.Now;
+                    ticketToUpdate.UpdatedByUserId = userId;
 
                     await _context.SaveChangesAsync();
                 }

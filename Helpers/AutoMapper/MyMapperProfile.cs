@@ -15,6 +15,8 @@ namespace Helpers.AutoMapper
             CreateMap<TicketCreateViewModel, Ticket>();
 
             CreateMap<Ticket, TicketEditViewModel>().ReverseMap();
+
+            CreateMap<Ticket, TicketListViewModel>();
         }
     }
 }
