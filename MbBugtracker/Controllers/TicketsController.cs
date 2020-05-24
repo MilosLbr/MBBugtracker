@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataModels;
 using MbBugtracker.Data;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using MbBugtracker.Models;
 
 namespace MbBugtracker.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TicketsController(ApplicationDbContext context)
+        public TicketsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Tickets
@@ -46,7 +51,8 @@ namespace MbBugtracker.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
-            return View();
+            var viewModel = new TicketCreateViewModel();
+            return View(viewModel);
         }
 
         // POST: Tickets/Create
@@ -54,11 +60,28 @@ namespace MbBugtracker.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Developer,Submiter,ProjectName,Priority,Status,Type,CreatedOn,UpdatedOn")] Ticket ticket)
-        {
+        public async Task<IActionResult> Create(TicketCreateViewModel ticket)
+        {            
+
             if (ModelState.IsValid)
             {
-                _context.Add(ticket);
+                var userId = _userManager.GetUserId(User);
+
+                var ticketToAdd = new Ticket()
+                {
+                    Title = ticket.Title,
+                    Description = ticket.Description,
+                    ProjectName = ticket.ProjectName,
+                    Priority = ticket.Priority,
+                    Status = ticket.Status,
+                    Type = ticket.Type,
+                    ApplicationUserId = userId,
+                    CreatedOn = DateTime.Now,
+                    UpdatedOn = DateTime.Now,
+
+                };
+
+                _context.Add(ticketToAdd);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20200524103717_CreateUserTicketsRelationship.cs" />
+    <Compile Remove="Data\Migrations\20200524103717_CreateUserTicketsRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200524110349_CreateUserTicketsRelationshipOneToMany.cs" />
+    <Compile Remove="Data\Migrations\20200524110349_CreateUserTicketsRelationshipOneToMany.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
