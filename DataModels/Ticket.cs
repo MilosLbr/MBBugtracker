@@ -22,6 +22,7 @@ namespace DataModels
 
         public virtual ApplicationUser ApplicationUser { get; set; }
         public string ApplicationUserId { get; set; }
+        public string UpdatedByUserId { get; set; }
 
     }
 }
