@@ -1,4 +1,4 @@
-﻿@model DataModels.Project
+﻿@model DataModels.ViewModels.ProjectCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -11,23 +11,36 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form  id="projectForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProjectName" class="control-label"></label>
-                <input asp-for="ProjectName" class="form-control" />
+                <input asp-for="ProjectName" class="form-control" id="projectName"/>
                 <span asp-validation-for="ProjectName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control" id="description" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="SelectUsers" class="control-label">Select Developers for this project</label>
+                <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" />
+                <span asp-validation-for="SelectedUserIds" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
+    <div class="col-md-4 ml-4">
+        <h6>
+            Selected Developers:
+        </h6>
+        <ul id="selectedDevelopers">
+        </ul>
+    </div>
+    
 </div>
 
 <div>
@@ -35,5 +48,69 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    <script>
+        $(document).ready(function () {
+            let selectedUserIds = [];
+
+
+            let appUsers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/users?userName=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $("#selectUsers").typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            }, {
+                name: 'users',
+                display: "userName",
+                source: appUsers,
+                limit: 10
+            }).on("typeahead:select", function (e, user) {
+                console.log(user)
+
+                if (selectedUserIds.includes(user.userName)) {
+                    $("#selectUsers").typeahead("val", "");
+                    return;
+                }
+
+                let listItem = document.createElement("li")
+                listItem.setAttribute("data-id", user.id)
+                listItem.setAttribute("data-userName", user.userName)
+                listItem.innerText = user.userName;
+                $("#selectedDevelopers").append(listItem);
+
+                selectedUserIds.push(user.userName);
+
+                $("#selectUsers").typeahead("val", "");
+            });
+
+            $("#projectForm").on("submit", function () {
+                event.preventDefault();
+                let projectToCreate = {};
+                projectToCreate["projectName"] = $("#projectName").val();
+                projectToCreate["description"] = $("#description").val();
+                projectToCreate["selectedUserIds"] = selectedUserIds;
+                console.log("clicked, going to send ", projectToCreate)
+                $.ajax({
+                    url: "/api/projects/create",
+                    method: "POST",
+                    data: JSON.stringify(projectToCreate),
+                    contentType: 'application/json',
+                }).done(data => {
+
+                }).fail(er => {
+                    console.log(er);
+                })
+            })
+
+        })
+    </script>
 }

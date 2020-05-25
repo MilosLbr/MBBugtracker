@@ -17,6 +17,7 @@ using AutoMapper;
 using Helpers.AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Newtonsoft.Json;
 
 namespace MbBugtracker
 {
@@ -43,7 +44,7 @@ namespace MbBugtracker
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
-           
+
             services.AddControllersWithViews(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -51,6 +52,7 @@ namespace MbBugtracker
                                     .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
+
             services.AddRazorPages();
 
             services.Configure<IdentityOptions>(options =>
@@ -67,6 +69,8 @@ namespace MbBugtracker
 
             services.AddAuthentication();
             services.AddAuthorization();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

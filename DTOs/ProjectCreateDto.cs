@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace DataModels.ViewModels
+namespace DTOs
 {
-    public class ProjectCreateViewModel
-    {
-        [Required]
+    public class ProjectCreateDto
+    {        
         public int Id { get; set; }
-        [Required]
-        [Display(Name = "Project name")]
         public string ProjectName { get; set; }
-        [Required]
         public string Description { get; set; }
-
-
-        [Required]
         public List<string> SelectedUserIds { get; set; }
     }
 }
