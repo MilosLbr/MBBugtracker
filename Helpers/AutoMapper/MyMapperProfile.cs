@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DataModels;
 using DataModels.ViewModels;
+using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,13 +12,14 @@ namespace Helpers.AutoMapper
     {
         public MyMapperProfile()
         {
+            //Ticket entity mappings
             CreateMap<Ticket, TicketCreateViewModel>().ReverseMap();
-
             CreateMap<Ticket, TicketEditViewModel>().ReverseMap();
-
             CreateMap<Ticket, TicketListViewModel>();
-
             CreateMap<Ticket, TicketDetailsViewModel>();
+
+            //AppUser mappings
+            CreateMap<ApplicationUser, ApplicationUserBasicInfoDto>();
         }
     }
 }

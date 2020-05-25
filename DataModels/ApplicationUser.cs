@@ -15,7 +15,7 @@ namespace DataModels
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
 
         public virtual ICollection<Ticket> Tickets { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<ProjectsAndUsers> ProjectsAndUsers { get; set; }
 
     }
 }

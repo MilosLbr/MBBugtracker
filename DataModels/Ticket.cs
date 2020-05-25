@@ -26,6 +26,7 @@ namespace DataModels
         public string AssignedTo { get; set; }
 
         public int ProjectId { get; set; }
+        public virtual Project Project { get; set; }
 
     }
 }

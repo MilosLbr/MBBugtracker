@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using DataModels;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,8 @@ namespace MbBugtracker.Data
 
         // Properties
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectsAndUsers> ProjectsAndUsers { get; set; }
 
 
         // Override onmodel creating
@@ -69,6 +72,16 @@ namespace MbBugtracker.Data
                     .IsRequired();
             });
 
+            modelBuilder.Entity<ProjectsAndUsers>()
+                .HasKey(pau => new { pau.ProjectId, pau.ApplicationUserId });
+            modelBuilder.Entity<ProjectsAndUsers>()
+                .HasOne(pau => pau.Project)
+                .WithMany(p => p.ProjectsAndUsers)
+                .HasForeignKey(pau => pau.ProjectId);
+            modelBuilder.Entity<ProjectsAndUsers>()
+                .HasOne(pau => pau.ApplicationUser)
+                .WithMany(au => au.ProjectsAndUsers)
+                .HasForeignKey(pau => pau.ApplicationUserId);
 
         }
     }

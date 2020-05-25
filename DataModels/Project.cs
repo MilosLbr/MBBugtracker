@@ -11,7 +11,7 @@ namespace DataModels
         public string Description { get; set; }
 
         public virtual ICollection<Ticket> ProjectTickets { get; set; }
-        public virtual ICollection<ApplicationUser> AssignedDevelopers { get; set; }
+        public virtual ICollection<ProjectsAndUsers> ProjectsAndUsers { get; set; }
 
     }
 }
