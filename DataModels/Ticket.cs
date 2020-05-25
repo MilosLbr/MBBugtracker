@@ -25,5 +25,7 @@ namespace DataModels
         public string UpdatedByUserId { get; set; }
         public string AssignedTo { get; set; }
 
+        public int ProjectId { get; set; }
+
     }
 }
