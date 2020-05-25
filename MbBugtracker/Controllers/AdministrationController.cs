@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using DataModels;
 using DTOs;
 using MbBugtracker.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MbBugtracker.Controllers
 {
+    [Authorize(Roles ="Admin,ProjectManager")]
     public class AdministrationController : Controller
     {
         private readonly ApplicationDbContext _context;

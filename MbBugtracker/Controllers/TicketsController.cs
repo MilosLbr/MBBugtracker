@@ -9,9 +9,11 @@ using DataModels.ViewModels;
 using MbBugtracker.Data;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MbBugtracker.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -26,6 +28,7 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Tickets
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var tickets = await _context.Tickets.ToListAsync();

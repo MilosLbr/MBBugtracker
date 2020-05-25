@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using DataModels;
 using MbBugtracker.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MbBugtracker.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class ApplicationRolesController : Controller
     {
         private readonly ApplicationDbContext _context;

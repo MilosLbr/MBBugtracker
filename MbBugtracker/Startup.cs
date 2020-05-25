@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using DataModels;
 using AutoMapper;
 using Helpers.AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace MbBugtracker
 {
@@ -42,7 +44,13 @@ namespace MbBugtracker
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
            
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                    .RequireAuthenticatedUser()
+                                    .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
             services.AddRazorPages();
 
             services.Configure<IdentityOptions>(options =>
@@ -56,6 +64,9 @@ namespace MbBugtracker
             });
 
             services.AddAutoMapper(typeof(MyMapperProfile));
+
+            services.AddAuthentication();
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
