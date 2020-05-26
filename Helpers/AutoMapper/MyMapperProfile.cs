@@ -20,6 +20,12 @@ namespace Helpers.AutoMapper
 
             //AppUser mappings
             CreateMap<ApplicationUser, ApplicationUserBasicInfoDto>();
+
+            //Projects mappings
+            CreateMap<ProjectCreateDto, Project>();
+            CreateMap<Project, ProjectDetailsViewModel>()
+                .ForMember(vm => vm.AssignedDevelopers, opt => opt.MapFrom(prop => prop.ProjectsAndUsers));
+            CreateMap<ProjectsAndUsers, ProjectsAndUsersViewModel>();
         }
     }
 }

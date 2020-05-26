@@ -1,32 +1,25 @@
-﻿@model DataModels.ViewModels.ProjectCreateViewModel
-
-@{
+﻿@{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h2>Create project</h2>
 
-<h4>Project</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form  id="projectForm">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form  id="projectForm">            
             <div class="form-group">
-                <label asp-for="ProjectName" class="control-label"></label>
-                <input asp-for="ProjectName" class="form-control" id="projectName"/>
-                <span asp-validation-for="ProjectName" class="text-danger"></span>
+                <label for="projectName" class="control-label">Project name:</label>
+                <input  class="form-control" id="projectName" autocomplete="off"/>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" id="description" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label for="description" class="control-label">Description:</label>
+                <input class="form-control" id="description" autocomplete="off"/>
             </div>
             <div class="form-group">
-                <label for="SelectUsers" class="control-label">Select Developers for this project</label>
-                <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" />
-                <span asp-validation-for="SelectedUserIds" class="text-danger"></span>
+                <label for="selectUsers" class="control-label">Select Developers for this project:</label>
+                <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" placeholder="Search developers..." autocomplete="off"/>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -48,12 +41,11 @@
 </div>
 
 @section Scripts {
-   @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
         $(document).ready(function () {
             let selectedUserIds = [];
-
 
             let appUsers = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -74,9 +66,8 @@
                 source: appUsers,
                 limit: 10
             }).on("typeahead:select", function (e, user) {
-                console.log(user)
 
-                if (selectedUserIds.includes(user.userName)) {
+                if (selectedUserIds.includes(user.id)) {
                     $("#selectUsers").typeahead("val", "");
                     return;
                 }
@@ -87,27 +78,35 @@
                 listItem.innerText = user.userName;
                 $("#selectedDevelopers").append(listItem);
 
-                selectedUserIds.push(user.userName);
+                selectedUserIds.push(user.id);
 
                 $("#selectUsers").typeahead("val", "");
             });
 
             $("#projectForm").on("submit", function () {
-                event.preventDefault();
-                let projectToCreate = {};
+                event.preventDefault(); //prevent form submit with reload
+
+                let projectToCreate = {}; // dto
+
                 projectToCreate["projectName"] = $("#projectName").val();
                 projectToCreate["description"] = $("#description").val();
                 projectToCreate["selectedUserIds"] = selectedUserIds;
-                console.log("clicked, going to send ", projectToCreate)
+
                 $.ajax({
                     url: "/api/projects/create",
                     method: "POST",
                     data: JSON.stringify(projectToCreate),
                     contentType: 'application/json',
                 }).done(data => {
+                    console.log(data, ' returned ')
+                    // reset input fields
+                    $("#projectName").val("");
+                    $("#description").val("");
+                    $("#selectedDevelopers").html("");
 
+                    toastr.success('Inserted new project!', 'Success!')
                 }).fail(er => {
-                    console.log(er);
+                    toastr.error(er.responseJSON);
                 })
             })
 

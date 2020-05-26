@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataModels;
 using MbBugtracker.Data;
+using AutoMapper;
+using DataModels.ViewModels;
 
 namespace MbBugtracker.Controllers
 {
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public ProjectsController(ApplicationDbContext context)
+        public ProjectsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Projects
@@ -40,7 +44,9 @@ namespace MbBugtracker.Controllers
                 return NotFound();
             }
 
-            return View(project);
+            var projectDetailsViewModel = _mapper.Map<ProjectDetailsViewModel>(project);
+
+            return View(projectDetailsViewModel);
         }
 
         // GET: Projects/Create
