@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataModels
+namespace DTOs
 {
-    public class Project
-    {
+    public class ProjectCreateDto
+    {        
         public int Id { get; set; }
         public string ProjectName { get; set; }
         public string Description { get; set; }
-
-        public virtual ICollection<Ticket> ProjectTickets { get; set; }
-        public virtual ICollection<ProjectsAndUsers> ProjectsAndUsers { get; set; }
-
+        public List<string> SelectedUserIds { get; set; }
     }
 }

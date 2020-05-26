@@ -1,0 +1,115 @@
+﻿@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create project</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form  id="projectForm">            
+            <div class="form-group">
+                <label for="projectName" class="control-label">Project name:</label>
+                <input  class="form-control" id="projectName" autocomplete="off"/>
+            </div>
+            <div class="form-group">
+                <label for="description" class="control-label">Description:</label>
+                <input class="form-control" id="description" autocomplete="off"/>
+            </div>
+            <div class="form-group">
+                <label for="selectUsers" class="control-label">Select Developers for this project:</label>
+                <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" placeholder="Search developers..." autocomplete="off"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4 ml-4">
+        <h6>
+            Selected Developers:
+        </h6>
+        <ul id="selectedDevelopers">
+        </ul>
+    </div>
+    
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            let selectedUserIds = [];
+
+            let appUsers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/users?userName=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            $("#selectUsers").typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            }, {
+                name: 'users',
+                display: "userName",
+                source: appUsers,
+                limit: 10
+            }).on("typeahead:select", function (e, user) {
+
+                if (selectedUserIds.includes(user.id)) {
+                    $("#selectUsers").typeahead("val", "");
+                    return;
+                }
+
+                let listItem = document.createElement("li")
+                listItem.setAttribute("data-id", user.id)
+                listItem.setAttribute("data-userName", user.userName)
+                listItem.innerText = user.userName;
+                $("#selectedDevelopers").append(listItem);
+
+                selectedUserIds.push(user.id);
+
+                $("#selectUsers").typeahead("val", "");
+            });
+
+            $("#projectForm").on("submit", function () {
+                event.preventDefault(); //prevent form submit with reload
+
+                let projectToCreate = {}; // dto
+
+                projectToCreate["projectName"] = $("#projectName").val();
+                projectToCreate["description"] = $("#description").val();
+                projectToCreate["selectedUserIds"] = selectedUserIds;
+
+                $.ajax({
+                    url: "/api/projects/create",
+                    method: "POST",
+                    data: JSON.stringify(projectToCreate),
+                    contentType: 'application/json',
+                }).done(data => {
+                    console.log(data, ' returned ')
+                    // reset input fields
+                    $("#projectName").val("");
+                    $("#description").val("");
+                    $("#selectedDevelopers").html("");
+
+                    toastr.success('Inserted new project!', 'Success!')
+                }).fail(er => {
+                    toastr.error(er.responseJSON);
+                })
+            })
+
+        })
+    </script>
+}
