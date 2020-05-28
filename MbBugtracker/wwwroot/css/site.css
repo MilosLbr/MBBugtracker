@@ -110,3 +110,7 @@ body {
 .tt-suggestion p {
     margin: 0;
 }
+
+.allUsersAndRoles div.row:nth-child(even) {
+    background-color: #f8f8f8;
+}

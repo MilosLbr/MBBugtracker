@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DTOs
 {
-    public class AddRoleToUserDto
+    public class AddRemoveRoleForUserDto
     {
         public string UserId { get; set; }
         public string RoleName { get; set; }

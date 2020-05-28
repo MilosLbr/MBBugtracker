@@ -20,6 +20,8 @@ namespace Helpers.AutoMapper
 
             //AppUser mappings
             CreateMap<ApplicationUser, ApplicationUserBasicInfoDto>();
+            CreateMap<ApplicationUser, ApplicationUserViewModel>();
+            CreateMap<ApplicationUser, ApplicationUserEditRolesViewModel>();
 
             //Projects mappings
             CreateMap<ProjectCreateDto, Project>();

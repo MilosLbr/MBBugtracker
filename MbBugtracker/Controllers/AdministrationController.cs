@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DataModels;
+using DataModels.ViewModels;
 using DTOs;
 using MbBugtracker.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MbBugtracker.Controllers
 {
@@ -17,73 +20,24 @@ namespace MbBugtracker.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        public AdministrationController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public AdministrationController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         // GET: Administration
         public ActionResult Index()
         {
             var users = _context.Users.ToList();
-            ViewData["users"] = users;
+            var usersViewModel = _mapper.Map<IEnumerable<ApplicationUserViewModel>>(users);
 
-            return View();
+            return View(usersViewModel);
         }
 
-        // GET: Administration/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Administration/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Administration/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Administration/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Administration/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
         // GET: Administration/Delete/5
         public async Task<ActionResult> Delete(string id)
@@ -122,28 +76,54 @@ namespace MbBugtracker.Controllers
         public async Task<ActionResult> EditRoles(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
+            var allRoles = await _context.Roles.ToListAsync();
 
-            ViewData["Roles"] = _context.Roles.ToList();
+            var userViewModel = _mapper.Map<ApplicationUserEditRolesViewModel>(user);
+            userViewModel.AllAvailableRoles = allRoles;
 
-            return View(user);
+            return View(userViewModel);
         }
 
         //Post Administration/AssignUserToRole
         [HttpPost]
-        public async Task<ActionResult> AssignUserToRole(AddRoleToUserDto addRoleToUserDto)
+        public async Task<ActionResult> AssignUserToRole(AddRemoveRoleForUserDto addRoleToUserDto)
         {
             var user = await _userManager.FindByIdAsync(addRoleToUserDto.UserId);
+
+            if(await _userManager.IsInRoleAsync(user, addRoleToUserDto.RoleName))
+            {
+                return BadRequest("The user is already in this role!");
+            }
+
             var res = await _userManager.AddToRoleAsync(user, addRoleToUserDto.RoleName);
 
             if (res.Succeeded)
             {
-                return View("EditRoles", user);
+                return Ok("Added role " + addRoleToUserDto.RoleName + " to " + user.UserName + "!");
             }
             else
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("An error happened while adding the user to role!");
             }
 
+        }
+
+        //Post Administration/RemoveUserFromRole
+        [HttpPost]
+        public async Task<IActionResult> RemoveUserFromRole(AddRemoveRoleForUserDto removeRoleForUserDto)
+        {
+            var user = await _userManager.FindByIdAsync(removeRoleForUserDto.UserId);
+
+            var res = await _userManager.RemoveFromRoleAsync(user, removeRoleForUserDto.RoleName);
+
+            if (res.Succeeded)
+            {
+                return Ok("Removed role " + removeRoleForUserDto.RoleName + " from this user!");
+            }
+            else
+            {
+                return BadRequest("An error happened while trying to remove the role from user!");
+            }
         }
     }
 }

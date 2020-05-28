@@ -1,21 +1,26 @@
-﻿@model DataModels.ApplicationUser
+﻿@model DataModels.ViewModels.ApplicationUserEditRolesViewModel
 @{
     ViewData["Title"] = "EditRoles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>EditRoles for @Model.UserName</h3>
+<h3 class="text-center m-4">EditRoles for @Model.UserName</h3>
+
+<hr />
 
 @if (Model.UserRoles != null)
 {
+    <h5>Assigned roles: </h5>
     <div>
-        @foreach (var userRole in Model.UserRoles)
-        {
-            <li>
-                @userRole.Role.Name
-            </li>
-        }
-
+        <ul id="assignedRoles">
+            @foreach (var userRole in Model.UserRoles)
+            {
+                <li class="row justify-content-between p-1">
+                    <span> @userRole.Role.Name</span>
+                    <button class="btn btn-danger removeRole" data-userId="@Model.Id" data-role="@userRole.Role.Name">Remove</button>
+                </li>
+            }
+        </ul>
     </div>
 }
 else
@@ -23,28 +28,33 @@ else
     <p>This user does not have any roles asigned.</p>
 }
 
+<hr />
+<section class="mt-1">
+    <h5 class="mb-3">
+        Select the role you want to assign:
+    </h5>
 
-<h4>
-    Possible roles
-</h4>
-
-<div>
-    @foreach (var item in (IEnumerable<DataModels.ApplicationRole>)ViewData["Roles"])
-    {
-        <li class="row justify-content-between"><span>@item.Name</span> <span><button class="btn btn-primary addRole" data-userId="@Model.Id" data-role="@item.Name">Add</button></span></li>
-    }
-</div>
+    <div class="text-center">
+        @foreach (var role in Model.AllAvailableRoles)
+        {
+            <p class="row justify-content-between mb-0 p-1 m-auto " style="width:85%">
+                <span>@role.Name</span>
+                <button class="btn btn-primary addRole" data-userId="@Model.Id" data-role="@role.Name">Add</button>
+            </p>
+        }
+    </div>
+</section>
 
 @section scripts
 {
     <script>
+
+
         $(document).ready(function () {
 
             $(".addRole").on("click", function () {
                 const userId = this.getAttribute("data-userId");
                 const roleName = this.getAttribute("data-role");
-
-                console.log(userId, roleName);
 
                 $.ajax({
                     url: "/Administration/AssignUserToRole",
@@ -53,14 +63,52 @@ else
                         userId,
                         roleName
                     }
-                }).done((data) => {
-                    console.log(data)
-                }).fail((data) => {
-                    console.error(data)
+                }).done((res) => {
+                    toastr.success(res);
+
+                    // update the list
+                    let listItem = $("<li></li>");
+                    listItem.addClass("row justify-content-between p-1");
+                    let spanRoleName = $("<span></span>");
+                    spanRoleName.text(roleName);
+                    let removeBtn = $("<button></button>");
+                    removeBtn.addClass("btn btn-danger removeRole");
+                    removeBtn.attr("data-userId", userId);
+                    removeBtn.attr("data-role", roleName);
+                    removeBtn.text("Remove")
+                    
+
+                    listItem.append(spanRoleName);
+                    listItem.append(removeBtn);
+
+                    $("ul#assignedRoles").append(listItem);
+                }).fail((er) => {
+                    toastr.error(er.responseText);
                 })
+            });
 
+            $("ul#assignedRoles").on("click", ".removeRole",function () {
 
+                const userId = this.getAttribute("data-userId");
+                const roleName = this.getAttribute("data-role");
 
+                $.ajax({
+                    url: "/Administration/RemoveUserFromRole",
+                    method: "POST",
+                    data: {
+                        userId,
+                        roleName
+                    }
+                })
+                    .done((res) => {
+                        toastr.success(res);
+                        let thisbtn = $(this);
+                        let parent = thisbtn.parent()
+                        parent.remove();
+                    })
+                    .fail((er) => {
+                        toastr.error(er.responseText);
+                    })
             })
         });
     </script>
