@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DTOs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace DataModels.ViewModels
 {
-    public class ProjectCreateViewModel
+    public class ProjectEditViewModel
     {
         [Required]
         public int Id { get; set; }
@@ -18,5 +19,6 @@ namespace DataModels.ViewModels
 
         [Required]
         public List<string> SelectedUserIds { get; set; }
+        public virtual IEnumerable<ProjectsAndUsers> ProjectsAndUsers { get; set; }
     }
 }

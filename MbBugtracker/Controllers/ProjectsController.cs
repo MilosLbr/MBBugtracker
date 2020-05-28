@@ -45,7 +45,6 @@ namespace MbBugtracker.Controllers
             }
 
             var projectDetailsViewModel = _mapper.Map<ProjectDetailsViewModel>(project);
-
             return View(projectDetailsViewModel);
         }
 
@@ -56,8 +55,6 @@ namespace MbBugtracker.Controllers
         }
 
         // POST: Projects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProjectName,Description")] Project project)
@@ -84,31 +81,57 @@ namespace MbBugtracker.Controllers
             {
                 return NotFound();
             }
-            return View(project);
+
+            var projectEditViewModel = _mapper.Map<ProjectEditViewModel>(project);
+            projectEditViewModel.SelectedUserIds = new List<string>();
+
+            foreach (var projUser in projectEditViewModel.ProjectsAndUsers)
+            {
+                projectEditViewModel.SelectedUserIds.Add(projUser.ApplicationUserId);
+            }
+            return View(projectEditViewModel);
         }
 
         // POST: Projects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectName,Description")] Project project)
+        public async Task<IActionResult> Edit(int id, [FromBody]ProjectEditViewModel projectEditViewModel)
         {
-            if (id != project.Id)
+            if (id != projectEditViewModel.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            if(string.IsNullOrWhiteSpace(projectEditViewModel.ProjectName) || string.IsNullOrWhiteSpace(projectEditViewModel.Description) || projectEditViewModel.SelectedUserIds.Count == 0)
+            {
+                return BadRequest("All fields are required");
+            }
+            else
             {
                 try
                 {
-                    _context.Update(project);
+                    var projectToEdit = await _context.Projects.FindAsync(projectEditViewModel.Id);
+
+                    _mapper.Map(projectEditViewModel, projectToEdit);
+
+                    // update ProjectsAndUsers table
+                    var projectUsers = new List<ProjectsAndUsers>();
+
+                    foreach (var userId in projectEditViewModel.SelectedUserIds)
+                    {
+                        var projectUser = new ProjectsAndUsers
+                        {
+                            ApplicationUserId = userId,
+                        };
+
+                        projectUsers.Add(projectUser);
+                    }
+
+                    projectToEdit.ProjectsAndUsers = projectUsers;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectExists(project.Id))
+                    if (!ProjectExists(projectEditViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -118,8 +141,7 @@ namespace MbBugtracker.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            return View(project);
+            }  
         }
 
         // GET: Projects/Delete/5

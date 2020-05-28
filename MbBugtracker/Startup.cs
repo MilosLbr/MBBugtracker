@@ -51,7 +51,11 @@ namespace MbBugtracker
                                     .RequireAuthenticatedUser()
                                     .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
-            });
+            }).AddNewtonsoftJson(opt =>
+               {
+                   opt.SerializerSettings.ReferenceLoopHandling =
+                        ReferenceLoopHandling.Ignore;
+               });
 
             services.AddRazorPages();
 

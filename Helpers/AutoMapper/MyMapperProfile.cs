@@ -23,6 +23,8 @@ namespace Helpers.AutoMapper
 
             //Projects mappings
             CreateMap<ProjectCreateDto, Project>();
+            CreateMap<Project, ProjectEditViewModel>().ReverseMap();
+
             CreateMap<Project, ProjectDetailsViewModel>()
                 .ForMember(vm => vm.AssignedDevelopers, opt => opt.MapFrom(prop => prop.ProjectsAndUsers));
             CreateMap<ProjectsAndUsers, ProjectsAndUsersViewModel>();

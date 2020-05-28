@@ -1,4 +1,4 @@
-﻿@model DataModels.Project
+﻿@model DataModels.ViewModels.ProjectEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -11,23 +11,42 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form id="editForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="ProjectName" class="control-label"></label>
-                <input asp-for="ProjectName" class="form-control" />
+                <input asp-for="ProjectName" class="form-control" id="projectName"/>
                 <span asp-validation-for="ProjectName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control" id="description"/>
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="selectUsers" class="control-label">Select Developers for this project:</label>
+                <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" placeholder="Search developers..." autocomplete="off" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+    </div>
+
+    <div class="col-md-4 ml-4">
+        <h6>
+            Selected Developers:
+        </h6>
+        <ul id="selectedDevelopers">
+            @foreach(var projUser in Model.ProjectsAndUsers)
+            {
+                <li class="d-flex p-2 justify-content-between align-items-center">
+                    @projUser.ApplicationUser.UserName 
+                    <button class="btn btn-danger removeBtn" data-id="@projUser.ApplicationUser.Id" data-username="@projUser.ApplicationUser.UserName">Remove</button>
+                </li>
+            }
+        </ul>
     </div>
 </div>
 
@@ -37,4 +56,100 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+            let projectEditViewModel = @Html.Raw(Json.Serialize(Model));
+            // copy selected Users to new property
+            let selectedUserIds = Object.assign([], projectEditViewModel.selectedUserIds)
+
+
+            // bloodhound for typeahead
+            let appUsers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/api/users?userName=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+
+            //typeahead box
+            $("#selectUsers").typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            }, {
+                name: 'users',
+                display: "userName",
+                source: appUsers,
+                limit: 10
+            }).on("typeahead:select", function (e, user) {
+
+                if (selectedUserIds.includes(user.id)) {
+                    $("#selectUsers").typeahead("val", "");
+                    toastr.error("Already added!");
+                    return;
+                }
+
+                let listItem = document.createElement("li")
+                let removeButton = document.createElement("button")
+                listItem.classList.add("d-flex", "p-2", "justify-content-between", "align-items-center")
+                listItem.innerText = user.userName;
+                removeButton.setAttribute("data-id", user.id)
+                removeButton.setAttribute("data-userName", user.userName)
+                removeButton.classList.add("btn", "btn-danger", "removeBtn")
+                removeButton.innerText = "Remove";
+
+                listItem.appendChild(removeButton);
+
+                $("#selectedDevelopers").append(listItem);
+
+                selectedUserIds.push(user.id);
+
+                $("#selectUsers").typeahead("val", "");
+            });
+
+            // remove selected developer
+            $("#selectedDevelopers").on("click", ".removeBtn",function () {
+                let selectedUserId = event.target.getAttribute("data-id");
+                let indexOfDataId = selectedUserIds.indexOf(selectedUserId);
+                selectedUserIds.splice(indexOfDataId, 1);
+
+                let removeBtn = $(event.target);
+                removeBtn.parent("li").remove();
+            })
+
+            // submit form
+            $("#editForm").on("submit", function () {
+                event.preventDefault(); // prevent default reload on submit
+
+
+                projectEditViewModel["projectName"] = $("#projectName").val();
+                projectEditViewModel["description"] = $("#description").val();
+                projectEditViewModel["selectedUserIds"] = selectedUserIds;
+
+
+                $.ajax({
+                    url: "@Url.Action("Edit", "Projects")" ,
+                    method: "POST",
+                    data: JSON.stringify(projectEditViewModel),
+                    contentType: 'application/json',
+                }).done(data => {
+                    toastr.success("Updated!");
+                    top.location.href = "/projects/"
+                }).fail(er => {
+                    console.log(er);
+                    toastr.error(er.responseText);
+                })
+            });
+
+
+
+
+
+
+
+        })
+    </script>
 }

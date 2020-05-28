@@ -18,7 +18,6 @@ namespace MbBugtracker.Controllers.Api
     [Route("api/projects")]
     [ApiController]
     [Produces("application/json")]
-    [AllowAnonymous]
     public class ProjectsApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -31,7 +30,6 @@ namespace MbBugtracker.Controllers.Api
         }
 
         [HttpPost("create")]
-        [AllowAnonymous]
         public async Task<IActionResult> CreateNewProject(ProjectCreateDto projectCreateDto)
         {
             if(string.IsNullOrWhiteSpace(projectCreateDto.Description) || string.IsNullOrWhiteSpace(projectCreateDto.ProjectName) || projectCreateDto.SelectedUserIds.Count == 0)
