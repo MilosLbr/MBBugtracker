@@ -23,6 +23,9 @@ namespace Helpers.AutoMapper
             CreateMap<ApplicationUser, ApplicationUserViewModel>();
             CreateMap<ApplicationUser, ApplicationUserEditRolesViewModel>();
 
+            //AppRole mappings
+            CreateMap<ApplicationRole, ApplicationRoleViewModel>().ReverseMap();
+
             //Projects mappings
             CreateMap<ProjectCreateDto, Project>();
             CreateMap<Project, ProjectEditViewModel>().ReverseMap();

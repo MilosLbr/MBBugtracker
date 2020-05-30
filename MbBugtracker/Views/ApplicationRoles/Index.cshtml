@@ -1,15 +1,17 @@
-﻿@model IEnumerable<DataModels.ApplicationRole>
+﻿@model IEnumerable<DataModels.ViewModels.ApplicationRoleViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Roles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Application Roles</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Role</a>
 </p>
+
+<h4 class="m-3">All available roles</h4>
 <table class="table">
     <thead>
         <tr>
@@ -19,12 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NormalizedName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ConcurrencyStamp)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -32,16 +28,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.RoleDescription)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NormalizedName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConcurrencyStamp)
+                @Html.DisplayFor(modelItem => item.RoleDescription)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -9,6 +9,8 @@ using DataModels;
 using MbBugtracker.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using DataModels.ViewModels;
 
 namespace MbBugtracker.Controllers
 {
@@ -17,17 +19,22 @@ namespace MbBugtracker.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IMapper _mapper;
 
-        public ApplicationRolesController(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager)
+        public ApplicationRolesController(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager, IMapper mapper)
         {
             _context = context;
             _roleManager = roleManager;
+            _mapper = mapper;
         }
 
         // GET: ApplicationRoles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Roles.ToListAsync());
+            var allRoles = await _context.Roles.ToListAsync();
+            var rolesVm = _mapper.Map<IEnumerable<ApplicationRoleViewModel>>(allRoles);
+
+            return View(rolesVm);
         }
 
         // GET: ApplicationRoles/Details/5
@@ -51,7 +58,9 @@ namespace MbBugtracker.Controllers
         // GET: ApplicationRoles/Create
         public IActionResult Create()
         {
-            return View();
+            var appRoleVM = new ApplicationRoleViewModel();
+
+            return View(appRoleVM);
         }
 
         // POST: ApplicationRoles/Create
@@ -59,19 +68,19 @@ namespace MbBugtracker.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ApplicationRole applicationRole)
+        public async Task<IActionResult> Create(ApplicationRoleViewModel applicationRoleVM)
         {
             if (ModelState.IsValid)
             {
                 var result = await _roleManager.CreateAsync(new ApplicationRole() { 
-                    Name = applicationRole.Name,
-                    RoleDescription = applicationRole.RoleDescription
+                    Name = applicationRoleVM.Name,
+                    RoleDescription = applicationRoleVM.RoleDescription
                 });
 
                 if (result.Succeeded)
                     return RedirectToAction("Index");
             }
-            return View(applicationRole);
+            return View(applicationRoleVM);
         }
 
         // GET: ApplicationRoles/Edit/5
@@ -87,7 +96,9 @@ namespace MbBugtracker.Controllers
             {
                 return NotFound();
             }
-            return View(applicationRole);
+
+            var appRoleVm = _mapper.Map<ApplicationRoleViewModel>(applicationRole);
+            return View(appRoleVm);
         }
 
         // POST: ApplicationRoles/Edit/5
@@ -95,34 +106,24 @@ namespace MbBugtracker.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("RoleDescription,Id,Name,NormalizedName,ConcurrencyStamp")] ApplicationRole applicationRole)
+        public async Task<IActionResult> Edit(string id, ApplicationRoleViewModel appRoleViewModel)
         {
-            if (id != applicationRole.Id)
+            if (id != appRoleViewModel.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                var roleToUpdate = await _roleManager.FindByIdAsync(id);
+                _mapper.Map(appRoleViewModel, roleToUpdate);
+
+                if(await _context.SaveChangesAsync() > 0)
                 {
-                    _context.Update(applicationRole);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ApplicationRoleExists(applicationRole.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            return View(applicationRole);
+            return View(appRoleViewModel);
         }
 
         // GET: ApplicationRoles/Delete/5
