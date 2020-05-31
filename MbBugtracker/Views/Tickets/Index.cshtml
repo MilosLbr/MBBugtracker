@@ -17,7 +17,7 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectName)
+                @Html.DisplayNameFor(model => model.Project.ProjectName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Priority)
@@ -53,10 +53,10 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProjectName)
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Priority)
+                @Enum.GetName(typeof(DataModels.EnumConstants.TicketPriority), Int32.Parse(item.Priority))
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)

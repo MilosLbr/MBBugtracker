@@ -83,9 +83,11 @@ namespace MbBugtracker.Controllers
         {
             
             var allUsers = await _context.Users.ToListAsync();
+            var allProjects = await _context.Projects.ToListAsync();
             var viewModel = new TicketCreateViewModel()
             {
-                AllAppUsers = allUsers
+                AllAppUsers = allUsers,
+                AllProjects = allProjects
             };
 
             return View(viewModel);

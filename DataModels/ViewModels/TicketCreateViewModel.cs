@@ -16,8 +16,9 @@ namespace DataModels.ViewModels
         [Required]
         public string Description { get; set; }
         [Required]
-        [Display(Name="Project Name")]
-        public string ProjectName { get; set; }
+        [Display(Name="Project")]
+        public int ProjectId { get; set; }
+        public IEnumerable<Project> AllProjects { get; set; }
         [Required]
         public string Priority { get; set; }
         [Required]
@@ -35,6 +36,7 @@ namespace DataModels.ViewModels
         public IEnumerable<ApplicationUser> AllAppUsers { get; set; }
 
         [Display(Name = "Assigned to")]
+        [Required]
         public string AssignedTo { get; set; }
 
     }

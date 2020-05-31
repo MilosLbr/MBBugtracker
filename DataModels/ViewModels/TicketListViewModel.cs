@@ -27,5 +27,6 @@ namespace DataModels.ViewModels
 
         [Display(Name = "Assigned to")]
         public string AssignedTo { get; set; }
+        public Project Project { get; set; }
     }
 }
