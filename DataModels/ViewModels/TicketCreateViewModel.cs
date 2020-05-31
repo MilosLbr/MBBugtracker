@@ -20,7 +20,10 @@ namespace DataModels.ViewModels
         public int ProjectId { get; set; }
         public IEnumerable<Project> AllProjects { get; set; }
         [Required]
-        public string Priority { get; set; }
+        [Display(Name = "Priority")]
+        public int TicketPriorityId { get; set; }
+        public TicketPriority TicketPriority { get; set; }
+        public IEnumerable<TicketPriority> AllTicketPriorities { get; set; }
         [Required]
         public string Status { get; set; }
         [Required]
@@ -33,11 +36,12 @@ namespace DataModels.ViewModels
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
-        public IEnumerable<ApplicationUser> AllAppUsers { get; set; }
 
         [Display(Name = "Assigned to")]
         [Required]
         public string AssignedTo { get; set; }
+        public IEnumerable<ApplicationUser> AllAppUsers { get; set; }
+
 
     }
 }

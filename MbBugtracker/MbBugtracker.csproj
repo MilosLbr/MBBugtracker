@@ -10,6 +10,10 @@
     <Compile Remove="Data\Migrations\20200524103717_CreateUserTicketsRelationship.Designer.cs" />
     <Compile Remove="Data\Migrations\20200524110349_CreateUserTicketsRelationshipOneToMany.cs" />
     <Compile Remove="Data\Migrations\20200524110349_CreateUserTicketsRelationshipOneToMany.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200531180356_AddTicketPriorityTable.cs" />
+    <Compile Remove="Data\Migrations\20200531180356_AddTicketPriorityTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200531180449_AddTicketPriorityTable.cs" />
+    <Compile Remove="Data\Migrations\20200531180449_AddTicketPriorityTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

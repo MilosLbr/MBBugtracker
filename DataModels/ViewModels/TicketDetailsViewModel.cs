@@ -12,7 +12,8 @@ namespace DataModels.ViewModels
         public string Description { get; set; }
         [Display(Name = "Project Name")]
         public string ProjectName { get; set; }
-        public string Priority { get; set; }
+        public int TicketPriorityId { get; set; }
+        public TicketPriority TicketPriority { get; set; }
         public string Status { get; set; }
         public string Type { get; set; }
         [Display(Name ="Created on")]

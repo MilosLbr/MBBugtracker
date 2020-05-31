@@ -19,6 +19,7 @@ namespace MbBugtracker.Data
 
         // Properties
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketPriority> TicketPriorities { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectsAndUsers> ProjectsAndUsers { get; set; }
 
@@ -70,6 +71,10 @@ namespace MbBugtracker.Data
                     .WithMany(au => au.Tickets)
                     .HasForeignKey(t => t.ApplicationUserId)
                     .IsRequired();
+
+                b.HasOne(t => t.TicketPriority)
+                    .WithOne(tp => tp.Ticket)
+                    .HasForeignKey<Ticket>(t => t.TicketPriorityId);
             });
 
             modelBuilder.Entity<ProjectsAndUsers>()

@@ -13,11 +13,17 @@ namespace DataModels.ViewModels
         public string Title { get; set; }
         [Required]
         public string Description { get; set; }
+
         [Required]
-        [Display(Name = "Project Name")]
-        public string ProjectName { get; set; }
+        [Display(Name = "Project")]
+        public int ProjectId { get; set; }
+        public IEnumerable<Project> AllProjects { get; set; }
+        
         [Required]
-        public string Priority { get; set; }
+        public int TicketPriorityId { get; set; }
+        public TicketPriority TicketPriority { get; set; }
+        public IEnumerable<TicketPriority> AllTicketPriorities { get; set; }
+        
         [Required]
         public string Status { get; set; }
         [Required]
@@ -26,9 +32,12 @@ namespace DataModels.ViewModels
         public DateTime CreatedOn { get; set; }
         [Required]
         public DateTime UpdatedOn { get; set; }
-        public IEnumerable<ApplicationUser> AllAppUsers { get; set; }
+        
+        
 
         [Display(Name ="Assigned to")]
+        [Required]
         public string AssignedTo { get; set; }
+        public IEnumerable<ApplicationUser> AllAppUsers { get; set; }
     }
 }

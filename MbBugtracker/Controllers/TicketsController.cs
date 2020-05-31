@@ -84,10 +84,12 @@ namespace MbBugtracker.Controllers
             
             var allUsers = await _context.Users.ToListAsync();
             var allProjects = await _context.Projects.ToListAsync();
+            var allPriorities = await _context.TicketPriorities.ToListAsync();
             var viewModel = new TicketCreateViewModel()
             {
                 AllAppUsers = allUsers,
-                AllProjects = allProjects
+                AllProjects = allProjects,
+                AllTicketPriorities = allPriorities
             };
 
             return View(viewModel);
@@ -115,7 +117,17 @@ namespace MbBugtracker.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(ticket);
+            else
+            {
+                var allUsers = await _context.Users.ToListAsync();
+                var allProjects = await _context.Projects.ToListAsync();
+                var allPriorities = await _context.TicketPriorities.ToListAsync();
+
+                ticket.AllAppUsers = allUsers;
+                ticket.AllProjects = allProjects;
+                ticket.AllTicketPriorities = allPriorities;
+                return View(ticket);
+            }
         }
 
         // GET: Tickets/Edit/5
@@ -132,8 +144,13 @@ namespace MbBugtracker.Controllers
                 return NotFound();
             }
             var allUsers = _context.Users.ToList();
+            var allProjects = await _context.Projects.ToListAsync();
+            var allPriorities = await _context.TicketPriorities.ToListAsync();
+
             var ticketViewModel = _mapper.Map<TicketEditViewModel>(ticket);
             ticketViewModel.AllAppUsers = allUsers;
+            ticketViewModel.AllProjects = allProjects;
+            ticketViewModel.AllTicketPriorities = allPriorities;
 
             return View(ticketViewModel);
         }
@@ -176,6 +193,13 @@ namespace MbBugtracker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            var allUsers = _context.Users.ToList();
+            var allProjects = await _context.Projects.ToListAsync();
+            var allPriorities = await _context.TicketPriorities.ToListAsync();
+            ticketViewModel.AllAppUsers = allUsers;
+            ticketViewModel.AllProjects = allProjects;
+            ticketViewModel.AllTicketPriorities = allPriorities;
+
             return View(ticketViewModel);
         }
 

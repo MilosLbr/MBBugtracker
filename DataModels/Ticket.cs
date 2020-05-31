@@ -13,7 +13,6 @@ namespace DataModels
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Priority { get; set; }
         public string Status { get; set; }
         public string Type { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -26,6 +25,9 @@ namespace DataModels
 
         public int ProjectId { get; set; }
         public virtual Project Project { get; set; }
+        public int TicketPriorityId { get; set; }
+
+        public virtual TicketPriority TicketPriority { get; set; }
 
     }
 }
