@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataModels.ViewModels
 {
-    public class TicketCreateViewModel
+    public class TicketCreateEditViewModel
     {
         [Required]
         public int Id { get; set; }

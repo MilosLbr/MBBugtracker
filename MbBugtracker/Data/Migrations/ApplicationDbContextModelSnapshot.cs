@@ -212,8 +212,7 @@ namespace MbBugtracker.Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("TicketPriorityId")
-                        .IsUnique();
+                    b.HasIndex("TicketPriorityId");
 
                     b.ToTable("Tickets");
                 });
@@ -367,8 +366,8 @@ namespace MbBugtracker.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("DataModels.TicketPriority", "TicketPriority")
-                        .WithOne("Ticket")
-                        .HasForeignKey("DataModels.Ticket", "TicketPriorityId")
+                        .WithMany("Tickets")
+                        .HasForeignKey("TicketPriorityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

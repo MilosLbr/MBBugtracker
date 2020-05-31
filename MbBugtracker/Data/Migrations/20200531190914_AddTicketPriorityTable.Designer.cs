@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MbBugtracker.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200531181332_AddTicketPriorityTable")]
+    [Migration("20200531190914_AddTicketPriorityTable")]
     partial class AddTicketPriorityTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -214,8 +214,7 @@ namespace MbBugtracker.Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("TicketPriorityId")
-                        .IsUnique();
+                    b.HasIndex("TicketPriorityId");
 
                     b.ToTable("Tickets");
                 });
@@ -369,8 +368,8 @@ namespace MbBugtracker.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("DataModels.TicketPriority", "TicketPriority")
-                        .WithOne("Ticket")
-                        .HasForeignKey("DataModels.Ticket", "TicketPriorityId")
+                        .WithMany("Tickets")
+                        .HasForeignKey("TicketPriorityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

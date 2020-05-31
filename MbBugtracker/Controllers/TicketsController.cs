@@ -85,7 +85,7 @@ namespace MbBugtracker.Controllers
             var allUsers = await _context.Users.ToListAsync();
             var allProjects = await _context.Projects.ToListAsync();
             var allPriorities = await _context.TicketPriorities.ToListAsync();
-            var viewModel = new TicketCreateViewModel()
+            var viewModel = new TicketCreateEditViewModel()
             {
                 AllAppUsers = allUsers,
                 AllProjects = allProjects,
@@ -100,7 +100,7 @@ namespace MbBugtracker.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TicketCreateViewModel ticket)
+        public async Task<IActionResult> Create(TicketCreateEditViewModel ticket)
         {            
 
             if (ModelState.IsValid)
@@ -110,7 +110,7 @@ namespace MbBugtracker.Controllers
                 ticket.CreatedOn = DateTime.Now;
                 ticket.UpdatedOn = DateTime.Now;
 
-                var ticketToAdd = _mapper.Map<TicketCreateViewModel, Ticket>(ticket);
+                var ticketToAdd = _mapper.Map<TicketCreateEditViewModel, Ticket>(ticket);
 
                 _context.Add(ticketToAdd);
                 await _context.SaveChangesAsync();
@@ -147,7 +147,7 @@ namespace MbBugtracker.Controllers
             var allProjects = await _context.Projects.ToListAsync();
             var allPriorities = await _context.TicketPriorities.ToListAsync();
 
-            var ticketViewModel = _mapper.Map<TicketEditViewModel>(ticket);
+            var ticketViewModel = _mapper.Map<TicketCreateEditViewModel>(ticket);
             ticketViewModel.AllAppUsers = allUsers;
             ticketViewModel.AllProjects = allProjects;
             ticketViewModel.AllTicketPriorities = allPriorities;
@@ -160,7 +160,7 @@ namespace MbBugtracker.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,  TicketEditViewModel ticketViewModel)
+        public async Task<IActionResult> Edit(int id, TicketCreateEditViewModel ticketViewModel)
         {
             var userId = _userManager.GetUserId(User);
 

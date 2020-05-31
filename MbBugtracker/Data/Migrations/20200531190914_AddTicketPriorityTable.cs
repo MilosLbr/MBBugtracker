@@ -32,8 +32,7 @@ namespace MbBugtracker.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_TicketPriorityId",
                 table: "Tickets",
-                column: "TicketPriorityId",
-                unique: true);
+                column: "TicketPriorityId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Tickets_TicketPriorities_TicketPriorityId",

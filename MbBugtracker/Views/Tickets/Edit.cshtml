@@ -1,4 +1,4 @@
-﻿@model DataModels.ViewModels.TicketEditViewModel
+﻿@model DataModels.ViewModels.TicketCreateEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -16,6 +16,7 @@
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CreatedOn" />
             <input type="hidden" asp-for="UpdatedOn" />
+            <input type="hidden" asp-for="ApplicationUserId" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />

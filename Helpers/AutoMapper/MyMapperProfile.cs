@@ -13,8 +13,7 @@ namespace Helpers.AutoMapper
         public MyMapperProfile()
         {
             //Ticket entity mappings
-            CreateMap<Ticket, TicketCreateViewModel>().ReverseMap();
-            CreateMap<Ticket, TicketEditViewModel>().ReverseMap();
+            CreateMap<Ticket, TicketCreateEditViewModel>().ReverseMap();
             CreateMap<Ticket, TicketListViewModel>();
             CreateMap<Ticket, TicketDetailsViewModel>();
 

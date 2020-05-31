@@ -72,9 +72,6 @@ namespace MbBugtracker.Data
                     .HasForeignKey(t => t.ApplicationUserId)
                     .IsRequired();
 
-                b.HasOne(t => t.TicketPriority)
-                    .WithOne(tp => tp.Ticket)
-                    .HasForeignKey<Ticket>(t => t.TicketPriorityId);
             });
 
             modelBuilder.Entity<ProjectsAndUsers>()
