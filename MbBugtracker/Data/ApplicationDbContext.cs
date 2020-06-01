@@ -22,6 +22,7 @@ namespace MbBugtracker.Data
         public DbSet<TicketPriority> TicketPriorities { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectsAndUsers> ProjectsAndUsers { get; set; }
+        public DbSet<TicketStatus> TicketStatuses { get; set; }
 
 
         // Override onmodel creating
@@ -72,6 +73,15 @@ namespace MbBugtracker.Data
                     .HasForeignKey(t => t.ApplicationUserId)
                     .IsRequired();
 
+            });
+
+            modelBuilder.Entity<TicketStatus>(b =>
+            {
+                b.HasData(new TicketStatus { Id = 1, StatusName = "Open" },
+                    new TicketStatus { Id = 2, StatusName = "Closed" },
+                    new TicketStatus { Id = 3, StatusName = "In progress" },
+                    new TicketStatus { Id = 4, StatusName = "To be tested" },
+                    new TicketStatus { Id = 5, StatusName = "Reopen" });
             });
 
             modelBuilder.Entity<ProjectsAndUsers>()
