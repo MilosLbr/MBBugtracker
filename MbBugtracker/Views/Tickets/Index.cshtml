@@ -20,13 +20,13 @@
                 @Html.DisplayNameFor(model => model.Project.ProjectName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TicketPriority.PriorityName)
+                @Html.DisplayNameFor(model => model.TicketPriority)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.TicketStatus)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Type)
+                @Html.DisplayNameFor(model => model.TicketType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CreatedOn)
@@ -59,10 +59,10 @@
                 @item.TicketPriority.PriorityName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @Html.DisplayFor(modelItem => item.TicketStatus.StatusName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Type)
+                @Html.DisplayFor(modelItem => item.TicketType.TypeName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedOn)

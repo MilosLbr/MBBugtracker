@@ -28,7 +28,6 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Tickets
-        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var tickets = await _context.Tickets.ToListAsync();
@@ -79,25 +78,16 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Tickets/Create
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             
-            var allUsers = await _context.Users.ToListAsync();
-            var allProjects = await _context.Projects.ToListAsync();
-            var allPriorities = await _context.TicketPriorities.ToListAsync();
-            var viewModel = new TicketCreateEditViewModel()
-            {
-                AllAppUsers = allUsers,
-                AllProjects = allProjects,
-                AllTicketPriorities = allPriorities
-            };
+            var viewModel = new TicketCreateEditViewModel();
+            PrepareCreateEditViewModel(ref viewModel);
 
             return View(viewModel);
         }
 
         // POST: Tickets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TicketCreateEditViewModel ticket)
@@ -119,13 +109,7 @@ namespace MbBugtracker.Controllers
             }
             else
             {
-                var allUsers = await _context.Users.ToListAsync();
-                var allProjects = await _context.Projects.ToListAsync();
-                var allPriorities = await _context.TicketPriorities.ToListAsync();
-
-                ticket.AllAppUsers = allUsers;
-                ticket.AllProjects = allProjects;
-                ticket.AllTicketPriorities = allPriorities;
+                PrepareCreateEditViewModel(ref ticket);
                 return View(ticket);
             }
         }
@@ -143,21 +127,14 @@ namespace MbBugtracker.Controllers
             {
                 return NotFound();
             }
-            var allUsers = _context.Users.ToList();
-            var allProjects = await _context.Projects.ToListAsync();
-            var allPriorities = await _context.TicketPriorities.ToListAsync();
 
             var ticketViewModel = _mapper.Map<TicketCreateEditViewModel>(ticket);
-            ticketViewModel.AllAppUsers = allUsers;
-            ticketViewModel.AllProjects = allProjects;
-            ticketViewModel.AllTicketPriorities = allPriorities;
+            PrepareCreateEditViewModel(ref ticketViewModel);
 
             return View(ticketViewModel);
         }
 
         // POST: Tickets/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TicketCreateEditViewModel ticketViewModel)
@@ -172,33 +149,16 @@ namespace MbBugtracker.Controllers
             if (ModelState.IsValid)
             {
                 var ticketToUpdate = _context.Tickets.Find(ticketViewModel.Id);
-                try
-                {
-                    _mapper.Map(ticketViewModel, ticketToUpdate);
-                    ticketToUpdate.UpdatedOn = DateTime.Now;
-                    ticketToUpdate.UpdatedByUserId = userId;
+                
+                _mapper.Map(ticketViewModel, ticketToUpdate);
+                ticketToUpdate.UpdatedOn = DateTime.Now;
+                ticketToUpdate.UpdatedByUserId = userId;
 
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TicketExists(ticketViewModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            var allUsers = _context.Users.ToList();
-            var allProjects = await _context.Projects.ToListAsync();
-            var allPriorities = await _context.TicketPriorities.ToListAsync();
-            ticketViewModel.AllAppUsers = allUsers;
-            ticketViewModel.AllProjects = allProjects;
-            ticketViewModel.AllTicketPriorities = allPriorities;
+            PrepareCreateEditViewModel(ref ticketViewModel);
 
             return View(ticketViewModel);
         }
@@ -235,6 +195,15 @@ namespace MbBugtracker.Controllers
         private bool TicketExists(int id)
         {
             return _context.Tickets.Any(e => e.Id == id);
+        }
+
+        private void PrepareCreateEditViewModel(ref TicketCreateEditViewModel ticketCreateEditViewModel)
+        {
+            ticketCreateEditViewModel.AllAppUsers = _context.Users.ToList();
+            ticketCreateEditViewModel.AllProjects = _context.Projects.ToList();
+            ticketCreateEditViewModel.AllTicketPriorities = _context.TicketPriorities.ToList();
+            ticketCreateEditViewModel.AllTicketStatuses = _context.TicketStatuses.ToList();
+            ticketCreateEditViewModel.AllTicketTypes = _context.TicketTypes.ToList();
         }
     }
 }

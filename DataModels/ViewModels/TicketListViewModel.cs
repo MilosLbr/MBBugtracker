@@ -11,23 +11,26 @@ namespace DataModels.ViewModels
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string ProjectName { get; set; }
-        public int TicketPriorityId { get; set; }
-        public TicketPriority TicketPriority { get; set; }
-        public string Status { get; set; }
-        public string Type { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
+
+        [Display(Name = "Priority")]
+        public TicketPriority TicketPriority { get; set; }
+        [Display(Name = "Status")]
+        public TicketStatus TicketStatus { get; set; }
+        [Display(Name = "Type")]
+        public TicketType TicketType { get; set; }
+        public ProjectDetailsViewModel Project { get; set; }
 
 
         public string UpdatedByUserId { get; set; }
 
         [Display(Name ="Updated by")]
         public string UpdatedByUserName { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; } //created by
 
         [Display(Name = "Assigned to")]
         public string AssignedTo { get; set; }
-        public Project Project { get; set; }
     }
 }
