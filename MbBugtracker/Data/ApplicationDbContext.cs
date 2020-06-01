@@ -23,6 +23,8 @@ namespace MbBugtracker.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectsAndUsers> ProjectsAndUsers { get; set; }
         public DbSet<TicketStatus> TicketStatuses { get; set; }
+        public DbSet<TicketType> TicketTypes { get; set; }
+
 
 
         // Override onmodel creating
@@ -82,6 +84,19 @@ namespace MbBugtracker.Data
                     new TicketStatus { Id = 3, StatusName = "In progress" },
                     new TicketStatus { Id = 4, StatusName = "To be tested" },
                     new TicketStatus { Id = 5, StatusName = "Reopen" });
+            });
+
+            modelBuilder.Entity<TicketType>(b =>
+            {
+                b.HasData(new TicketType { Id = 1, TypeName = "Code bug" },
+                    new TicketType { Id = 2, TypeName = "Crash/Hang" },
+                    new TicketType { Id = 3, TypeName = "Data loss" },
+                    new TicketType { Id = 4, TypeName = "Performance" },
+                    new TicketType { Id = 5, TypeName = "UI" },
+                    new TicketType { Id = 6, TypeName = "New Feature" },
+                    new TicketType { Id = 7, TypeName = "Enhancement" },
+                    new TicketType { Id = 8, TypeName = "Security" },
+                    new TicketType { Id = 9, TypeName = "Other" });
             });
 
             modelBuilder.Entity<ProjectsAndUsers>()

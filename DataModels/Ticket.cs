@@ -18,8 +18,9 @@ namespace DataModels
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
 
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; } // created by
         public string ApplicationUserId { get; set; }
+
         public string UpdatedByUserId { get; set; }
         public string AssignedTo { get; set; }
 
@@ -31,6 +32,9 @@ namespace DataModels
 
         public int TicketStatusId { get; set; }
         public virtual TicketStatus TicketStatus { get; set; }
+
+        public int TicketTypeId { get; set; }
+        public virtual TicketType TicketType { get; set; }
 
     }
 }
