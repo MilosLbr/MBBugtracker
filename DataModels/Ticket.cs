@@ -25,9 +25,12 @@ namespace DataModels
 
         public int ProjectId { get; set; }
         public virtual Project Project { get; set; }
-        public int TicketPriorityId { get; set; }
 
+        public int TicketPriorityId { get; set; }
         public virtual TicketPriority TicketPriority { get; set; }
+
+        public int TicketStatusId { get; set; }
+        public virtual TicketStatus TicketStatus { get; set; }
 
     }
 }

@@ -8,5 +8,6 @@ namespace DataModels
     {
         public int Id { get; set; }
         public string StatusName { get; set; }
+        public virtual IEnumerable<Ticket> Tickets { get; set; }
     }
 }
