@@ -114,3 +114,18 @@ body {
 .allUsersAndRoles div.row:nth-child(even) {
     background-color: #f8f8f8;
 }
+
+.ticketListContainer{
+    overflow-x:auto;
+}
+
+@media(min-width: 1200px) {
+    .ticketListContainer {
+        min-width: 1300px;
+        margin-left: -4rem;
+    }
+}
+    .ticketListTable{
+        min-width:1300px;
+    }
+   

@@ -12,6 +12,8 @@ namespace DataModels.ViewModels
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
+        [Display(Name = "Due Date")]
+        public DateTime DueDate { get; set; }
 
         [Display(Name = "Priority")]
         public TicketPriority TicketPriority { get; set; }

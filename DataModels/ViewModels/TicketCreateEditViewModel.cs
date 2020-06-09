@@ -40,7 +40,10 @@ namespace DataModels.ViewModels
         public DateTime CreatedOn { get; set; }
         [Required]
         public DateTime UpdatedOn { get; set; }
-        
+        [Required]
+        [Display(Name= "Due Date")]
+        public DateTime DueDate { get; set; }
+
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; } 
 

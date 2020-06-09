@@ -30,6 +30,9 @@ namespace MbBugtracker.Controllers
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ViewBag.userId = userId;
+
             var tickets = await _context.Tickets.ToListAsync();
 
             var ticketList = _mapper.Map<List<TicketListViewModel>>(tickets);

@@ -1,90 +1,95 @@
-﻿@model IEnumerable<DataModels.ViewModels.TicketListViewModel>
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<DataModels.ViewModels.TicketListViewModel>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Project.ProjectName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketPriority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedOn)
-            </th>
-            <th>
-                Created By
-            </th>            
-            <th>
-                Edited By
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AssignedTo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project.ProjectName)
-            </td>
-            <td>
-                @item.TicketPriority.PriorityName
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus.StatusName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketType.TypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedByUserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedTo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>    
+        <div class="ticketListContainer">
+            <table class="table table-striped ticketListTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="min-width: 350px;">
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Project.ProjectName)
+                        </th>
+                        <th>
+                            Reported By
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TicketPriority)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TicketStatus)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TicketType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedOn)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DueDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AssignedTo)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex justify-content-start">
+                                    @if (ViewBag.userId == item.ApplicationUser.Id)
+                                    {
+                                        <a asp-action="Edit" title="Edit ticket" asp-route-id="@item.Id">@item.Title</a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Details" title="Details" asp-route-id="@item.Id">@item.Title</a>
+                                    }
+                                    <span>&nbsp;&nbsp;&nbsp;</span>
+                                    <a asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-info-circle" aria-hidden="true" title="Details"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                            </td>
+                            <td>
+                                @item.TicketPriority.PriorityName
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TicketStatus.StatusName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TicketType.TypeName)
+                            </td>
+                            <td>
+                                @item.CreatedOn.ToString("dd.MM.yyyy.")
+                            </td>
+                            <td>
+                                @item.DueDate.ToString("dd.MM.yyyy.")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssignedTo)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
