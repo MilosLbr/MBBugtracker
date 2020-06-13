@@ -116,16 +116,7 @@ body {
 }
 
 .ticketListContainer{
-    overflow-x:auto;
+    min-width: 1200px;
 }
 
-@media(min-width: 1200px) {
-    .ticketListContainer {
-        min-width: 1300px;
-        margin-left: -4rem;
-    }
-}
-    .ticketListTable{
-        min-width:1300px;
-    }
    

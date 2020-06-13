@@ -7,12 +7,12 @@
 }
 
 
-    <h1>Index</h1>
+    <h1>My tickets</h1>
 
     <p>
         <a asp-action="Create">Create New</a>
     </p>    
-        <div class="ticketListContainer">
+        @*<div class="ticketListContainer">
             <table class="table table-striped ticketListTable">
                 <thead class="thead-dark">
                     <tr>
@@ -92,4 +92,67 @@
                 </tbody>
             </table>
 
-        </div>
+        </div>*@
+    <div class=" ticketListContainer">
+        <table  id="ticketsTable" class="table table-striped">
+            <thead class="table-dark table-bordered">
+                <tr>
+                    <th style="width: 200px">Title</th>
+                    <th>Project</th>
+                    <th>Reported by</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Created on</th>
+                    <th>Due date</th>
+                    <th>Assigned to</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+
+@section scripts
+{ 
+    <script>
+        $(document).ready(() => {
+
+            let ticketTable = $("#ticketsTable").DataTable({
+                ajax: {
+                    "url": "/api/tickets",
+                    "dataSrc": ""
+                },
+                columns: [
+                    {
+                        "data": "title",
+                    },
+                    { "data": "project.projectName" },
+                    { "data": "applicationUser.userName" },
+                    { "data": "ticketPriority.priorityName" },
+                    { "data": "ticketStatus.statusName" },
+                    { "data": "ticketType.typeName" },
+                    {
+                        "data": "createdOn",
+                        "render": (data) => {
+                            let date = new Date(data);
+                            let formated = moment(date).format("DD.MM.YYYY");
+                            return formated;
+                        }
+                    },
+                    {
+                        "data": "dueDate",
+                        "render": (data) => {
+                            let date = new Date(data);
+                            let formated = moment(date).format("DD.MM.YYYY");
+                            return formated;
+                        }
+                    },
+                    { "data": "assignedTo" }
+                ],
+                "columnDefs": [
+                    { "width": "200px", "targets": 0 }
+                ]
+            });
+        })
+    </script>
+}
