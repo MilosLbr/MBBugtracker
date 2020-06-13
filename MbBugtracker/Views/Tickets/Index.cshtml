@@ -7,6 +7,7 @@
 }
 
 
+    <p id="userId" data-userid="@ViewBag.userId" class="d-none"></p>
     <h1>My tickets</h1>
 
     <p>
@@ -97,7 +98,7 @@
         <table  id="ticketsTable" class="table table-striped">
             <thead class="table-dark table-bordered">
                 <tr>
-                    <th style="width: 200px">Title</th>
+                    <th >Title</th>
                     <th>Project</th>
                     <th>Reported by</th>
                     <th>Priority</th>
@@ -125,6 +126,19 @@
                 columns: [
                     {
                         "data": "title",
+                        "render": (data, type, ticket) => {
+                            let userId = $("#userId").data("userid");
+                            let detailsHref = "/Tickets/Details/" + ticket.id;
+                            let infoCircle = '<a href=' + detailsHref +'><i class="fa fa-info-circle" aria-hidden="true" title="Details"></i></a>';
+
+                            if (userId == ticket.applicationUser.id) {
+                                let editHref = "/Tickets/Edit/" + ticket.id;
+                                return "<a" + " href=" + editHref + ">" + ticket.title + "&nbsp;" + infoCircle + "</a>";
+                            } else {
+                                return "<a>" + ticket.title +"&nbsp" + infoCircle + "</a>"
+                            }
+
+                        }
                     },
                     { "data": "project.projectName" },
                     { "data": "applicationUser.userName" },
