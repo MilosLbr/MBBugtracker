@@ -11,13 +11,35 @@
     <p>Created by @Model.ApplicationUser.UserName on @Model.CreatedOn.ToString("dd.MM.yyyy.")</p>
     <p>Project: @Model.Project.ProjectName</p>
 
-    <div class="ticketStatusDiv mb-1">
-        Status: @Model.TicketStatus.StatusName
+    <div class="ticketStatusDiv mb-2">
+        @{var classname = ""; }
+        @switch (Model.TicketStatus.StatusName)
+        {
+            case "Open":
+                classname = "text-warning-custom";
+                break;
+            case "Closed":
+                classname = "text-success";
+                break;
+            case "In progress":
+                classname = "text-primary";
+                break;
+            case "To be tested":
+                classname = "text-info";
+                break;
+            case "Reopen":
+                classname = "text-danger";
+                break;
+        }
+        <span >Status:</span> <span class="@classname">@Model.TicketStatus.StatusName</span>
     </div>
 
     @if (ViewBag.userId == Model.ApplicationUser.Id)
     {
-        <a class="mt-2 btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <div class="row pl-4">
+        <a style="font-size:0.9rem;" class="mt-2 mr-4 btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a style="font-size:0.9rem;" class="mt-2 btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    </div>
     }
 </div>
  
@@ -34,29 +56,29 @@
     <div class="container">
         <div class="row p-2">
             <div class="col-md-4 row border-bottom p-1">
-                <span class="col-6">Type:</span> 
+                <span class="col-6 detailsProperty">Type:</span> 
                 <span class="col-6">@Model.TicketType.TypeName</span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 row border-bottom p-1">
-                <span class="col-6">Due on:</span>
+                <span class="col-6 detailsProperty">Due on:</span>
                 <span class="col-6">@Model.DueDate.ToString("dd.MM.yyyy.")</span>
             </div>
         </div>
         <div class="row p-2">
             <div class="col-md-4 row border-bottom p-1">
-                <span class="col-6">Status:</span>
+                <span class="col-6 detailsProperty">Status:</span>
                 <span class="col-6">@Model.TicketStatus.StatusName</span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 row border-bottom p-1">
-                <span class="col-6">Priority:</span>
+                <span class="col-6 detailsProperty">Priority:</span>
                 <span class="col-6">@Model.TicketPriority.PriorityName</span>
             </div>
         </div>
         <div class="row p-2">
             <div class="col-md-4 row border-bottom p-1">
-                <span class="col-6">Assigned to:</span>
+                <span class="col-6 detailsProperty">Assigned to:</span>
                 <span class="col-6">@Model.ApplicationUser.UserName</span>
             </div>
         </div>

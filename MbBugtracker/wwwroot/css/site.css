@@ -70,6 +70,9 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+.text-warning-custom {
+    color: #c82333;
+}
 
 /*Typeahead styles*/
 .form-group > .twitter-typeahead{
@@ -118,5 +121,22 @@ body {
 .ticketListContainer{
     min-width: 1200px;
 }
+.ticketStatusDiv {
+    padding: 15px;
+    border-radius: 12px;
+    background-color: #f7f7f7;
+}
+.ticketDescription {
+    padding: 10px;
+    border-radius: 12px;
+    background-color: #fff0c1;
+}
 
-   
+.ticketDescription p {
+    font-weight: 400;
+    white-space: pre-line;
+}
+
+.detailsProperty{
+    opacity: 0.9;
+}

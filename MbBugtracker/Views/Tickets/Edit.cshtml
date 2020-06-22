@@ -7,7 +7,11 @@
 
 <h1>Edit</h1>
 
-<h4>Ticket</h4>
+<h4>
+    Ticket &nbsp; 
+    <a asp-action="Details" asp-route-id="@Model.Id"><i class="fa fa-info-circle" aria-hidden="true" title="Details"></i>
+        </a>
+</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,7 +28,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
