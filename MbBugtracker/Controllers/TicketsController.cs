@@ -55,6 +55,9 @@ namespace MbBugtracker.Controllers
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var userId = _userManager.GetUserId(HttpContext.User);
+            ViewBag.userId = userId;
+
             if (id == null)
             {
                 return NotFound();
