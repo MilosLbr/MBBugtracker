@@ -33,5 +33,7 @@ namespace DataModels.ViewModels
 
         [Display(Name = "Assigned to")]
         public string AssignedTo { get; set; }
+
+        public TicketResolution TicketResolution { get; set; }
     }
 }

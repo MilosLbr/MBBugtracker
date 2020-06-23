@@ -135,6 +135,10 @@ body {
     border-radius: 12px;
     background-color: #fff0c1;
 }
+.ticketResolved :hover{
+    cursor: pointer;
+    opacity: 0.9;
+}
 
 .ticketDescription p {
     font-weight: 400;

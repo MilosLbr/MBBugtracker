@@ -5,7 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3 class="mb-2 border-bottom">@Model.Title</h3>
+<h3 class="mb-2 border-bottom">
+    @Model.Title &nbsp; 
+    
+    @if (Model.TicketResolution != null){
+        <span class="text-success ticketResolved" title="Resolved!"><i class="fas fa-check-circle"></i></span>
+    }
+</h3>
 
 <div class="mainTicketInfo p-1 mb-4" >
     <p>Created by @Model.ApplicationUser.UserName on @Model.CreatedOn.ToString("dd.MM.yyyy.")</p>
@@ -89,9 +95,23 @@
 
 <div class="tabbedOptions mb-4">
     <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" id="nav-comments-tab" data-toggle="tab" href="#nav-comments" role="tab" aria-controls="nav-comments" aria-selected="true">Comments</a>
-        <a class="nav-item nav-link" id="nav-resolution-tab" data-toggle="tab" href="#nav-resolution" role="tab" aria-controls="nav-resolution" aria-selected="false">Resolution</a>
-        <a class="nav-item nav-link" id="nav-activity-tab" data-toggle="tab" href="#nav-activity" role="tab" aria-controls="nav-activity" aria-selected="false">Activity log</a>
+        <a class="nav-item nav-link active" id="nav-comments-tab" data-toggle="tab" href="#nav-comments" role="tab" aria-controls="nav-comments" aria-selected="true">
+            Comments
+        </a>         
+        <a class="nav-item nav-link" id="nav-resolution-tab" data-toggle="tab" href="#nav-resolution" role="tab" aria-controls="nav-resolution" aria-selected="false">            
+            @if (Model.TicketResolution != null)
+            {
+                <span class="text-success">Resolved &nbsp;</span>
+                <span class="text-success ticketResolved"><i class="fas fa-check-circle"></i></span>
+            }
+            else
+            {
+                <span>Resolution</span>
+            }
+        </a>
+        <a class="nav-item nav-link" id="nav-activity-tab" data-toggle="tab" href="#nav-activity" role="tab" aria-controls="nav-activity" aria-selected="false">
+            Activity log
+        </a>
     </div>
 
     <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
@@ -99,7 +119,20 @@
             Comments will go here...
         </div>
         <div class="tab-pane fade" id="nav-resolution" role="tabpanel" aria-labelledby="nav-resolution-tab">
-            Resolution will go here...
+
+            @if(Model.TicketResolution != null)
+            {
+                <ul>
+                    <li>@Model.TicketResolution.ResolutionComment</li>
+                    <li>Resolved by @Model.TicketResolution.CreatedBy</li>
+                    <li>On @Model.TicketResolution.DateCreated</li>
+                </ul>
+            }
+            else
+            {
+                <p>Resolution create form should go here...</p>
+            }
+
         </div>
         <div class="tab-pane fade" id="nav-activity" role="tabpanel" aria-labelledby="nav-activity-tab">
             Activity log will go here...
