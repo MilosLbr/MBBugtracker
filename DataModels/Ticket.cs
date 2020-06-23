@@ -35,5 +35,7 @@ namespace DataModels
         public int TicketTypeId { get; set; }
         public virtual TicketType TicketType { get; set; }
 
+        public virtual TicketResolution TicketResolution { get; set; }
+
     }
 }

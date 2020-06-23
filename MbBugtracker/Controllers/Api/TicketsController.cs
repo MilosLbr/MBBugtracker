@@ -25,7 +25,7 @@ namespace MbBugtracker.Controllers.Api
             _mapper = mapper;
         }
 
-
+        
         public async Task<IActionResult> GetTickets()
         {
             var tickets = await _context.Tickets.ToListAsync();
