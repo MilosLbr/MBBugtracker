@@ -83,9 +83,30 @@
             </div>
         </div>
     </div>
-
-
 </div>
+
+<hr />
+
+<div class="tabbedOptions mb-4">
+    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-comments-tab" data-toggle="tab" href="#nav-comments" role="tab" aria-controls="nav-comments" aria-selected="true">Comments</a>
+        <a class="nav-item nav-link" id="nav-resolution-tab" data-toggle="tab" href="#nav-resolution" role="tab" aria-controls="nav-resolution" aria-selected="false">Resolution</a>
+        <a class="nav-item nav-link" id="nav-activity-tab" data-toggle="tab" href="#nav-activity" role="tab" aria-controls="nav-activity" aria-selected="false">Activity log</a>
+    </div>
+
+    <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-comments" role="tabpanel" aria-labelledby="nav-comments-tab">
+            Comments will go here...
+        </div>
+        <div class="tab-pane fade" id="nav-resolution" role="tabpanel" aria-labelledby="nav-resolution-tab">
+            Resolution will go here...
+        </div>
+        <div class="tab-pane fade" id="nav-activity" role="tabpanel" aria-labelledby="nav-activity-tab">
+            Activity log will go here...
+        </div>
+    </div>
+</div>
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
