@@ -121,6 +121,10 @@ body {
 .ticketListContainer{
     min-width: 1200px;
 }
+
+.ticketListContainer .hiddenDate{
+    display: none;
+}
 .ticketStatusDiv {
     padding: 15px;
     border-radius: 12px;
