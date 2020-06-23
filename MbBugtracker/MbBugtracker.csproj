@@ -20,6 +20,8 @@
     <Compile Remove="Data\Migrations\20200531185122_AddTicketPriorityTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200601193953_AddTicketStatusesTable.cs" />
     <Compile Remove="Data\Migrations\20200601193953_AddTicketStatusesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200623170620_AddTicketResolutionTable.cs" />
+    <Compile Remove="Data\Migrations\20200623170620_AddTicketResolutionTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,11 +17,15 @@ namespace Helpers.AutoMapper
             CreateMap<Ticket, TicketListViewModel>();
             CreateMap<Ticket, TicketListDto>();
             CreateMap<Ticket, TicketDetailsViewModel>();
+            CreateMap<Ticket, TicketBasicInfoDto>();
 
             // priority, status, type
             CreateMap<TicketPriority, TicketPriorityDto>();
             CreateMap<TicketStatus, TicketStatusDto>();
             CreateMap<TicketType, TicketTypeDto>();
+
+            // ticket resolution
+            CreateMap<TicketResolution, TicketResolutionDto>().ReverseMap();
 
             //AppUser mappings
             CreateMap<ApplicationUser, ApplicationUserBasicInfoDto>();
@@ -35,6 +39,7 @@ namespace Helpers.AutoMapper
             CreateMap<ProjectCreateDto, Project>();
             CreateMap<Project, ProjectEditViewModel>().ReverseMap();
             CreateMap<Project, ProjectDetailsDto>();
+            CreateMap<Project, ProjectBasicInfoDto>();
 
             CreateMap<Project, ProjectDetailsViewModel>()
                 .ForMember(vm => vm.AssignedDevelopers, opt => opt.MapFrom(prop => prop.ProjectsAndUsers));
