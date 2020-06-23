@@ -28,7 +28,7 @@ namespace MbBugtracker.Controllers.Api
         
         public async Task<IActionResult> GetTickets()
         {
-            var tickets = await _context.Tickets.ToListAsync();
+            var tickets = await _context.Tickets.OrderByDescending(t => t.TicketPriorityId).ToListAsync();
 
             var ticketList = _mapper.Map<List<TicketListDto>>(tickets);
 

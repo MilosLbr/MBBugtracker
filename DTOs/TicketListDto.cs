@@ -24,5 +24,7 @@ namespace DTOs
         public ApplicationUserBasicInfoDto ApplicationUser { get; set; } //created by
 
         public string AssignedTo { get; set; }
+
+        public virtual TicketResolutionDto TicketResolution { get; set; }
     }
 }
