@@ -7,5 +7,6 @@ namespace DTOs
     public class TicketResolutionCommentDto
     {
         public string ResolutionComment { get; set; }
+        public int TicketStatusId { get; set; }
     }
 }

@@ -45,8 +45,12 @@ namespace MbBugtracker.Controllers.Api
         }
 
         [HttpPost("{ticketId}")]
-        public async Task<ActionResult> PostResolutionForTicket(int ticketId, TicketResolutionCommentDto comment)
+        public async Task<ActionResult> PostResolutionForTicket(int ticketId, TicketResolutionCommentDto ticketResolution)
         {
+            if(string.IsNullOrEmpty(ticketResolution.ResolutionComment)){
+                return BadRequest("Comment is required for resolving the ticket!");
+            }
+
             var ticketFromDb = await _context.Tickets.FindAsync(ticketId);
 
             if (ticketFromDb == null)
@@ -65,11 +69,11 @@ namespace MbBugtracker.Controllers.Api
                 CreatedBy = currentUser.UserName,
                 CreatedByUserId = currentUser.Id,
                 DateCreated = DateTime.Now,
-                ResolutionComment = comment.ResolutionComment,
+                ResolutionComment = ticketResolution.ResolutionComment,
                 TicketId = ticketId
             };
-            ticketFromDb.TicketStatusId = (int)EnumConstants.TicketStatuses.Closed;
 
+            ticketFromDb.TicketStatusId = ticketResolution.TicketStatusId;
 
             _context.TicketResolution.Add(resolution);
 

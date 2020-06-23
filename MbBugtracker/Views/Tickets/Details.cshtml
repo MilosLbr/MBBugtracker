@@ -130,7 +130,26 @@
             }
             else
             {
-                <p>Resolution create form should go here...</p>
+             <div class="container">
+                <h5>Resolve this ticket:</h5>
+                <div class="form-group">
+                    <label for="selectTicketStatus">Select status:</label>
+                    <select class="form-control" id="selectTicketStatus">
+                        <option value="1">Open</option>
+                        <option value="2">Closed</option>
+                        <option value="3">In progress</option>
+                        <option value="4">To be tested</option>
+                        <option value="5">Reopen</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="resolutionComment">Insert comment:</label>
+                    <textarea class="form-control" id="resolutionComment"></textarea>
+                </div>
+
+                <button id="submitResolution" class="btn btn-success">Submit</button>
+        </div>
+                
             }
 
         </div>
@@ -143,3 +162,37 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            console.log("ready", $("#submitResolution"))
+            $("#submitResolution").click(() => {
+                let ticketId = @Html.Raw(Model.Id);
+                let ticketStatus = $("#selectTicketStatus").val();
+                let comment = $("#resolutionComment").val();
+
+                let postData = {
+                    ticketStatusId: ticketStatus,
+                    resolutionComment: comment
+                }
+
+                $.ajax({
+                    url: "/api/ticketresolution/" + ticketId,
+                    data: JSON.stringify(postData),
+                    method: "POST",
+                    contentType: 'application/json',
+                })
+                    .done(() => {
+                        window.location.reload();
+                    })
+                    .fail((er) => {
+                        console.log(er)
+                        toastr.error(er.responseText);
+                    });
+            });
+        })
+    </script>
+ }
