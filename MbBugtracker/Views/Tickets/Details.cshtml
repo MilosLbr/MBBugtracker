@@ -116,8 +116,34 @@
 
     <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-comments" role="tabpanel" aria-labelledby="nav-comments-tab">
-            Comments will go here...
+            @if(Model.TicketComments != null)
+            {
+                @foreach (var comment in Model.TicketComments)
+                {
+                    <blockquote class="blockquote p-2 ml-4">
+                        <h5>@comment.CreatedBy:</h5>
+                        <p>
+                            @comment.Content
+                        </p>
+                        <footer class="blockquote-footer">@comment.DateAdded</footer>
+
+                    </blockquote>
+                }
+            }
+
+            <hr class="mb-4"/>
+
+            <button id="displayPostCommentDiv" class="btn btn-light mb-4">Post new comment</button>
+
+            <div id="postCommentDiv" >
+                <div id="postcommentFormGroup" class="form-group">
+                    <label for="commentContent">Insert comment:</label>
+                    <textarea class="form-control" rows="4" id="commentContent"></textarea>
+                </div>
+                
+            </div>
         </div>
+
         <div class="tab-pane fade" id="nav-resolution" role="tabpanel" aria-labelledby="nav-resolution-tab">
 
             @if(Model.TicketResolution != null)
@@ -152,6 +178,7 @@
             }
 
         </div>
+
         <div class="tab-pane fade" id="nav-activity" role="tabpanel" aria-labelledby="nav-activity-tab">
             Activity log will go here...
         </div>
@@ -167,7 +194,7 @@
 
     <script>
         $(document).ready(function () {
-            console.log("ready", $("#submitResolution"))
+
             $("#submitResolution").click(() => {
                 let ticketId = @Html.Raw(Model.Id);
                 let ticketStatus = $("#selectTicketStatus").val();
@@ -192,6 +219,13 @@
                         toastr.error(er.responseText);
                     });
             });
+
+            $("button#displayPostCommentDiv").click(() => {
+                let postCommentDiv = $("#postCommentDiv");
+                postCommentDiv.css("max-height", "300px");
+                postCommentDiv.css("overflow", "unset");
+                
+            })
         })
     </script>
  }

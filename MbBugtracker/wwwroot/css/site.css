@@ -148,3 +148,11 @@ body {
 .detailsProperty{
     opacity: 0.9;
 }
+
+div#postCommentDiv{
+    width: 95%;
+    margin: 0 auto 10px auto;
+    transition: 0.4s;
+    max-height: 0;
+    overflow: hidden;
+}

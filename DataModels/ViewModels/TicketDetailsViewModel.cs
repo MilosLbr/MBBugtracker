@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTOs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -35,5 +36,7 @@ namespace DataModels.ViewModels
         public string AssignedTo { get; set; }
 
         public TicketResolution TicketResolution { get; set; }
+
+        public IEnumerable<TicketCommentListDto> TicketComments { get; set; }
     }
 }

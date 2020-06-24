@@ -27,6 +27,9 @@ namespace Helpers.AutoMapper
             // ticket resolution
             CreateMap<TicketResolution, TicketResolutionDto>().ReverseMap();
 
+            // ticket comment
+            CreateMap<TicketComment, TicketCommentListDto>().ReverseMap();
+
             //AppUser mappings
             CreateMap<ApplicationUser, ApplicationUserBasicInfoDto>();
             CreateMap<ApplicationUser, ApplicationUserViewModel>();
