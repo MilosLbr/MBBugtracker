@@ -15,7 +15,7 @@ namespace DTOs
         public TicketPriorityDto TicketPriority { get; set; }
         public TicketStatusDto TicketStatus { get; set; }
         public TicketTypeDto TicketType { get; set; }
-        public ProjectDetailsDto Project { get; set; }
+        public ProjectBasicInfoDto Project { get; set; }
 
 
         public string UpdatedByUserId { get; set; }
@@ -25,6 +25,8 @@ namespace DTOs
 
         public string AssignedTo { get; set; }
 
-        public virtual TicketResolutionDto TicketResolution { get; set; }
+        public TicketResolutionDto TicketResolution { get; set; }
+        public IEnumerable<TicketCommentListDto> TicketComments { get; set; }
+
     }
 }
