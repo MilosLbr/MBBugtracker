@@ -122,11 +122,10 @@
 
             @if(Model.TicketResolution != null)
             {
-                <ul>
-                    <li>@Model.TicketResolution.ResolutionComment</li>
-                    <li>Resolved by @Model.TicketResolution.CreatedBy</li>
-                    <li>On @Model.TicketResolution.DateCreated</li>
-                </ul>
+                <blockquote class="blockquote p-4">
+                    <p>@Model.TicketResolution.ResolutionComment</p>
+                    <footer class="blockquote-footer">Resolved by @Model.TicketResolution.CreatedBy On @Model.TicketResolution.DateCreated</footer>
+                </blockquote>
             }
             else
             {
