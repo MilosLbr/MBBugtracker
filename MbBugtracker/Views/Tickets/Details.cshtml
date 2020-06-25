@@ -201,29 +201,11 @@
 
             $("#submitResolution").click(() => {
                 let ticketId = @Html.Raw(Model.Id);
-                let ticketStatus = $("#selectTicketStatus").val();
-                let comment = $("#resolutionComment").val();
-
-                let postData = {
-                    ticketStatusId: ticketStatus,
-                    resolutionComment: comment
-                }
-
-                $.ajax({
-                    url: "/api/ticketresolution/" + ticketId,
-                    data: JSON.stringify(postData),
-                    method: "POST",
-                    contentType: 'application/json',
-                })
-                    .done(() => {
-                        window.location.reload();
-                    })
-                    .fail((er) => {
-                        toastr.error(er.responseText);
-                    });
+                submitTicketResolution(ticketId);
             });
 
             $("button#displayPostCommentDiv").click(() => {
+                // toggle postCommentDiv visibility
                 let postCommentDiv = $("#postCommentDiv");
                 if (postCommentDiv.css("max-height") == "0px") {
                     postCommentDiv.css("max-height", "300px");
@@ -236,53 +218,13 @@
 
             $("#postCommentBtn").click(() => {
                 let ticketId = @Html.Raw(Model.Id);
-                let content = $("#commentContent").val();
-                let postData = {
-                    content
-                }
-
-                $.ajax({
-                    url: "/api/ticketcomments/" + ticketId,
-                    data: JSON.stringify(postData),
-                    method: "POST",
-                    contentType: 'application/json',
-                })
-                    .done((comments) => {
-                        populateListOfComments(comments);
-                        toastr.success("Posted!");
-                        $("#commentContent").val("");
-                    })
-                    .fail((er) => {
-                        toastr.error(er.responseText);
-                    })
-
+                postTicketComment(ticketId);
             });
 
-
-            let populateListOfComments = (comments) => {
-                console.log(comments);
-                let commentContainerDiv = $("#commentContainer");
-                commentContainerDiv.html("");
-                comments.forEach((cmt) => {
-                    console.log(cmt);
-                    let commentElem = $("<blockquote></blockquote>");
-                    commentElem.addClass("blockquote p-2 ml-4");
-                    let commentHeader = $("<h5></h5>");
-                    let commentParagraph = $("<p></p>");
-                    let commentFooter = $("<footer></footer>");
-                    commentFooter.addClass("blockquote-footer");
-
-                    commentHeader.text(cmt.createdBy);
-                    commentParagraph.text(cmt.content);
-                    commentFooter.text(moment(cmt.dateAdded).format("DD.MM.YYYY. HH:mm:ss"));
-                    commentFooter.text(moment(cmt.dateAdded).format("DD.MM.YYYY. HH:mm:ss"));
-
-                    commentElem.append(commentHeader, commentParagraph, commentFooter);
-                    commentContainerDiv.append(commentElem);
-                });              
-
-            };
-
-        })
+        });
     </script>
+
+    <script src="~/js/Tickets/Details/submitTicketResolution.js"></script>
+    <script src="~/js/Tickets/Details/postTicketComment.js"></script>
+    <script src="~/js/Tickets/Details/populateListOfComments.js"></script>
  }
