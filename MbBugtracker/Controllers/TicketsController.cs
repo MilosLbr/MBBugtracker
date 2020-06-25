@@ -71,15 +71,8 @@ namespace MbBugtracker.Controllers
             }
 
             var ticketViewModel = _mapper.Map<TicketDetailsViewModel>(ticket);
-            if(ticketViewModel.UpdatedByUserId != null)
-            {
-                var user = await _userManager.FindByIdAsync(ticketViewModel.UpdatedByUserId);
 
-                var updatedByUserName = user.UserName;
-
-                ticketViewModel.UpdatedByUserName = updatedByUserName;
-            }
-
+            ticketViewModel.TicketComments = ticketViewModel.TicketComments.OrderByDescending(tc => tc.DateAdded);
             return View(ticketViewModel);
         }
 

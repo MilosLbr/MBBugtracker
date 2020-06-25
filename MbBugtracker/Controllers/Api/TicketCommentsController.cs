@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MbBugtracker.Controllers.Api
 {
@@ -68,7 +69,10 @@ namespace MbBugtracker.Controllers.Api
 
             if(await _context.SaveChangesAsync() >= 1)
             {
-                return Ok("Successfully posted new comment!");
+                var allCommentsForTicket = await _context.TicketComments.Where(tc => tc.TicketId == ticketId).OrderByDescending(tc=> tc.DateAdded).ToListAsync();
+                var commentListDto = _mapper.Map<IEnumerable<TicketCommentListDto>>(allCommentsForTicket);
+
+                return Ok(commentListDto);
             }
             else
             {

@@ -152,7 +152,7 @@ body {
 div#postCommentDiv{
     width: 95%;
     margin: 0 auto 10px auto;
-    transition: 0.4s;
+    transition: 0.5s;
     max-height: 0;
     overflow: hidden;
 }
