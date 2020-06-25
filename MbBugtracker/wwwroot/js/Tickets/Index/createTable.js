@@ -24,7 +24,7 @@ function createTable() {
 
                     if (userId == ticket.applicationUser.id) {
                         let editHref = "/Tickets/Edit/" + ticket.id;
-                        return "<a" + " href=" + editHref + ">" + ticket.title + "&nbsp;" + infoCircle + "</a>";
+                        return resolved + "&nbsp;" +  "<a" + " href=" + editHref + ">" + ticket.title + "&nbsp;" + infoCircle + "</a>";
                     } else {
                         return resolved + "&nbsp;" + "<a>" + ticket.title + "&nbsp" + infoCircle + "</a>";
                     }

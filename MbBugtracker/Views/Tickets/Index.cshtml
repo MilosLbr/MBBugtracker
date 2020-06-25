@@ -7,38 +7,39 @@
 }
 
 
-    <p id="userId" data-userid="@ViewBag.userId" class="d-none"></p>
-    <h1>My tickets</h1>
+<p id="userId" data-userid="@ViewBag.userId" class="d-none"></p>
+<h1>My tickets</h1>
 
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>  
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 
-    <div class=" ticketListContainer">
-        <table  id="ticketsTable" class="table table-striped">
-            <thead class="table-dark table-bordered">
-                <tr>
-                    <th >Title</th>
-                    <th>Project</th>
-                    <th>Reported by</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Type</th>
-                    <th>Created on</th>
-                    <th>Due date</th>
-                    <th>Assigned to</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
+<div class=" ticketListContainer">
+    <table id="ticketsTable" class="table table-striped">
+        <thead class="table-dark table-bordered">
+            <tr>
+                <th>Title</th>
+                <th>Project</th>
+                <th>Reported by</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Created on</th>
+                <th>Due date</th>
+                <th>Assigned to</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 
 @section scripts
-{ 
-    <script src="~/js/Tickets/Index/createTable.js"></script>
+{
+
     <script>
         $(document).ready(() => {
             let ticketTable;
             createTable();
         });
     </script>
+    <script src="~/js/Tickets/Index/createTable.js"></script>
 }
