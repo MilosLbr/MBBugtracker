@@ -71,7 +71,7 @@ body {
 }
 
 .text-warning-custom {
-    color: #c82333;
+    color: #c82333 !important;
 }
 
 /*Typeahead styles*/
@@ -135,10 +135,15 @@ body {
     border-radius: 12px;
     background-color: #fff0c1;
 }
-.ticketResolved :hover{
+
+#TicketStatus_Id{
+    border-radius: 3px;
+}
+.ticketResolved :hover {
     cursor: pointer;
     opacity: 0.9;
 }
+
 
 .ticketDescription p {
     font-weight: 400;

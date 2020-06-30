@@ -1,4 +1,5 @@
 ﻿@model DataModels.ViewModels.TicketDetailsViewModel
+@using DataModels.EnumConstants
 
 @{
     ViewData["Title"] = "Details";
@@ -37,7 +38,16 @@
                 classname = "text-danger";
                 break;
         }
-        <span >Status:</span> <span class="@classname">@Model.TicketStatus.StatusName</span>
+        <form class="form-inline">
+            <div class="input-group">
+                <label class="col-form-label" for="TicketStatus_Id">Status: </label>
+                @Html.DropDownListFor(m => m.TicketStatus.Id,
+                        new SelectList(Model.TicketStatuses, "Id", "StatusName", Model.TicketStatus.Id),
+                        null,
+                        new { @class = "form-control ml-2 p-1 "+ @classname })
+            </div>
+        </form>
+
     </div>
 
     @if (ViewBag.userId == Model.ApplicationUser.Id)
@@ -74,7 +84,7 @@
         <div class="row p-2">
             <div class="col-md-4 row border-bottom p-1">
                 <span class="col-6 detailsProperty">Status:</span>
-                <span class="col-6">@Model.TicketStatus.StatusName</span>
+                <span class="col-6" id="ticketStatusTableData">@Model.TicketStatus.StatusName</span>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 row border-bottom p-1">
@@ -198,9 +208,9 @@
 
     <script>
         $(document).ready(function () {
+            let ticketId = @Html.Raw(Model.Id);
 
             $("#submitResolution").click(() => {
-                let ticketId = @Html.Raw(Model.Id);
                 submitTicketResolution(ticketId);
             });
 
@@ -217,8 +227,11 @@
             });
 
             $("#postCommentBtn").click(() => {
-                let ticketId = @Html.Raw(Model.Id);
                 postTicketComment(ticketId);
+            });
+
+            $("#TicketStatus_Id").change(() => {
+                updateTicketStatus(ticketId);
             });
 
         });
@@ -227,4 +240,5 @@
     <script src="~/js/Tickets/Details/submitTicketResolution.js"></script>
     <script src="~/js/Tickets/Details/postTicketComment.js"></script>
     <script src="~/js/Tickets/Details/populateListOfComments.js"></script>
+    <script src="~/js/Tickets/Details/updateTicketStatus.js"></script>
  }

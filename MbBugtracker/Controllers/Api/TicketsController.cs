@@ -34,5 +34,32 @@ namespace MbBugtracker.Controllers.Api
 
             return Ok(ticketList);
         }
+
+        [HttpPut("updateStatus")]
+        public async Task<IActionResult> UpdateTicketStatus(TicketStatusUpdateDto ticketStatusUpdateDto)
+        {
+            var ticketFromDb = _context.Tickets.Find(ticketStatusUpdateDto.TicketId);
+
+            if(ticketFromDb == null)
+            {
+                return BadRequest("Ticket with Id: " + ticketStatusUpdateDto.TicketId + " was not found!");
+            }
+
+            ticketFromDb.TicketStatusId = ticketStatusUpdateDto.TicketStatusId;
+
+            if(await _context.SaveChangesAsync() >= 1)
+            {
+                var ticketStatusToReturn = await _context.TicketStatuses.FindAsync(ticketStatusUpdateDto.TicketStatusId);
+
+                var ticketStatusToReturnDto = _mapper.Map<TicketStatusDto>(ticketStatusToReturn);
+                return Ok(ticketStatusToReturnDto);
+            }
+            else
+            {
+                return BadRequest("An error has occured while updating ticket status!");
+            }
+
+
+        }
     }
 }

@@ -71,8 +71,10 @@ namespace MbBugtracker.Controllers
             }
 
             var ticketViewModel = _mapper.Map<TicketDetailsViewModel>(ticket);
+            ticketViewModel.TicketStatuses = await _context.TicketStatuses.ToListAsync();
 
             ticketViewModel.TicketComments = ticketViewModel.TicketComments.OrderByDescending(tc => tc.DateAdded);
+
             return View(ticketViewModel);
         }
 

@@ -41,8 +41,8 @@ namespace DataModels.ViewModels
         [Required]
         public DateTime UpdatedOn { get; set; }
         [Required]
-        [Display(Name= "Due Date")]
-        public DateTime DueDate { get; set; }
+        [Display(Name = "Due Date")]
+        public DateTime DueDate { get; set; } = DateTime.Now;
 
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; } 
