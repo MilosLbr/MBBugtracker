@@ -18,6 +18,8 @@ using Helpers.AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Newtonsoft.Json;
+using MbBugtracker.Services.Interfaces;
+using MbBugtracker.Services.Implementation;
 
 namespace MbBugtracker
 {
@@ -44,6 +46,8 @@ namespace MbBugtracker
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddControllersWithViews(config =>
             {

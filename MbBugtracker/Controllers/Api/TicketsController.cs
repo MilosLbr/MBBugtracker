@@ -7,8 +7,10 @@ using DataModels.ViewModels;
 using DTOs;
 using MbBugtracker.Data;
 using Microsoft.AspNetCore.Http;
+using DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MbBugtracker.Services.Interfaces;
 
 namespace MbBugtracker.Controllers.Api
 {
@@ -18,11 +20,13 @@ namespace MbBugtracker.Controllers.Api
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TicketsController(ApplicationDbContext context, IMapper mapper)
+        public TicketsController(ApplicationDbContext context, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _context = context;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         

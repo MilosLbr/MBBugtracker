@@ -10,6 +10,7 @@ using MbBugtracker.Data;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using MbBugtracker.Services.Interfaces;
 
 namespace MbBugtracker.Controllers
 {
@@ -19,12 +20,14 @@ namespace MbBugtracker.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TicketsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public TicketsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Tickets
@@ -33,7 +36,7 @@ namespace MbBugtracker.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             ViewBag.userId = userId;
 
-            var tickets = await _context.Tickets.ToListAsync();
+            var tickets = await _unitOfWork.Tickets.GetAll();
 
             var ticketList = _mapper.Map<List<TicketListViewModel>>(tickets);
 
