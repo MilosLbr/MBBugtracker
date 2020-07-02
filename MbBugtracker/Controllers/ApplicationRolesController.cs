@@ -11,19 +11,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using DataModels.ViewModels;
+using MbBugtracker.Services.Interfaces;
 
 namespace MbBugtracker.Controllers
 {
     [Authorize(Roles ="Admin")]
     public class ApplicationRolesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IMapper _mapper;
 
-        public ApplicationRolesController(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager, IMapper mapper)
+        public ApplicationRolesController( IUnitOfWork unitOfWork ,RoleManager<ApplicationRole> roleManager, IMapper mapper)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
             _roleManager = roleManager;
             _mapper = mapper;
         }
@@ -31,7 +32,7 @@ namespace MbBugtracker.Controllers
         // GET: ApplicationRoles
         public async Task<IActionResult> Index()
         {
-            var allRoles = await _context.Roles.ToListAsync();
+            var allRoles = await _roleManager.Roles.ToListAsync();
             var rolesVm = _mapper.Map<IEnumerable<ApplicationRoleViewModel>>(allRoles);
 
             return View(rolesVm);
@@ -45,8 +46,8 @@ namespace MbBugtracker.Controllers
                 return NotFound();
             }
 
-            var applicationRole = await _context.Roles
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var applicationRole = await _roleManager.FindByIdAsync(id);
+
             if (applicationRole == null)
             {
                 return NotFound();
@@ -91,7 +92,7 @@ namespace MbBugtracker.Controllers
                 return NotFound();
             }
 
-            var applicationRole = await _context.Roles.FindAsync(id);
+            var applicationRole = await _roleManager.FindByIdAsync(id);
             if (applicationRole == null)
             {
                 return NotFound();
@@ -118,7 +119,7 @@ namespace MbBugtracker.Controllers
                 var roleToUpdate = await _roleManager.FindByIdAsync(id);
                 _mapper.Map(appRoleViewModel, roleToUpdate);
 
-                if(await _context.SaveChangesAsync() > 0)
+                if(await _unitOfWork.Complete() > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
@@ -134,8 +135,7 @@ namespace MbBugtracker.Controllers
                 return NotFound();
             }
 
-            var applicationRole = await _context.Roles
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var applicationRole = await _roleManager.FindByIdAsync(id);
             if (applicationRole == null)
             {
                 return NotFound();
@@ -149,15 +149,11 @@ namespace MbBugtracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var applicationRole = await _context.Roles.FindAsync(id);
-            _context.Roles.Remove(applicationRole);
-            await _context.SaveChangesAsync();
+            var applicationRole = await _roleManager.FindByIdAsync(id);
+            await _roleManager.DeleteAsync(applicationRole);
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ApplicationRoleExists(string id)
-        {
-            return _context.Roles.Any(e => e.Id == id);
-        }
     }
 }

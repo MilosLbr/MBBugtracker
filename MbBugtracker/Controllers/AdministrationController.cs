@@ -7,6 +7,7 @@ using DataModels;
 using DataModels.ViewModels;
 using DTOs;
 using MbBugtracker.Data;
+using MbBugtracker.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,21 +19,21 @@ namespace MbBugtracker.Controllers
     [Authorize(Roles ="Admin,ProjectManager")]
     public class AdministrationController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public AdministrationController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
+        public AdministrationController( ApplicationDbContext context, RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
-            _context = context;
+            _roleManager = roleManager;
             _userManager = userManager;
             _mapper = mapper;
         }
 
         // GET: Administration
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var users = _context.Users.ToList();
+            var users = await _userManager.Users.ToListAsync();
             var usersViewModel = _mapper.Map<IEnumerable<ApplicationUserViewModel>>(users);
 
             return View(usersViewModel);
@@ -76,7 +77,7 @@ namespace MbBugtracker.Controllers
         public async Task<ActionResult> EditRoles(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            var allRoles = await _context.Roles.ToListAsync();
+            var allRoles = await _roleManager.Roles.ToListAsync();
 
             var userViewModel = _mapper.Map<ApplicationUserEditRolesViewModel>(user);
             userViewModel.AllAvailableRoles = allRoles;
