@@ -8,6 +8,8 @@ namespace DTOs
     {
         public int ProjectId { get; set; }
 
-        public virtual ApplicationUserBasicInfoDto ApplicationUser { get; set; }
+        public string  ApplicationUserId { get; set; }
+
+        public ApplicationUserBasicInfoDto ApplicationUser { get; set; }
     }
 }

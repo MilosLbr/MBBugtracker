@@ -60,9 +60,11 @@
     <script>
         $(document).ready(function () {
             let projectEditViewModel = @Html.Raw(Json.Serialize(Model));
-            // copy selected Users to new property
-            let selectedUserIds = Object.assign([], projectEditViewModel.selectedUserIds)
 
+            let selectedUserIds = [];
+            projectEditViewModel.projectsAndUsers.forEach(p => {
+                selectedUserIds.push(p.applicationUser.id);
+            });
 
             // bloodhound for typeahead
             let appUsers = new Bloodhound({
@@ -111,7 +113,7 @@
             });
 
             // remove selected developer
-            $("#selectedDevelopers").on("click", ".removeBtn",function () {
+            $("#selectedDevelopers").on("click", ".removeBtn", function () {
                 let selectedUserId = event.target.getAttribute("data-id");
                 let indexOfDataId = selectedUserIds.indexOf(selectedUserId);
                 selectedUserIds.splice(indexOfDataId, 1);
@@ -124,14 +126,12 @@
             $("#editForm").on("submit", function () {
                 event.preventDefault(); // prevent default reload on submit
 
-
                 projectEditViewModel["projectName"] = $("#projectName").val();
                 projectEditViewModel["description"] = $("#description").val();
                 projectEditViewModel["selectedUserIds"] = selectedUserIds;
 
-
                 $.ajax({
-                    url: "@Url.Action("Edit", "Projects")" ,
+                    url: "@Url.Action("Edit", "Projects")",
                     method: "POST",
                     data: JSON.stringify(projectEditViewModel),
                     contentType: 'application/json',
@@ -139,17 +139,9 @@
                     toastr.success("Updated!");
                     top.location.href = "/projects/"
                 }).fail(er => {
-                    console.log(er);
-                    toastr.error(er.responseText);
+
                 })
             });
-
-
-
-
-
-
-
-        })
+        });
     </script>
 }

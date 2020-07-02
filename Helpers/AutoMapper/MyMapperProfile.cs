@@ -47,6 +47,9 @@ namespace Helpers.AutoMapper
             CreateMap<Project, ProjectDetailsViewModel>()
                 .ForMember(vm => vm.AssignedDevelopers, opt => opt.MapFrom(prop => prop.ProjectsAndUsers));
             CreateMap<ProjectsAndUsers, ProjectsAndUsersViewModel>();
+            CreateMap<ProjectsAndUsers, ProjectsAndUsersDto>();
+            CreateMap<ProjectsAndUsersDto, ProjectsAndUsers>()
+                .ForMember(pu => pu.ApplicationUser, opt => opt.Ignore());
         }
     }
 }

@@ -19,6 +19,6 @@ namespace DataModels.ViewModels
 
         [Required]
         public List<string> SelectedUserIds { get; set; }
-        public virtual IEnumerable<ProjectsAndUsers> ProjectsAndUsers { get; set; }
+        public virtual IEnumerable<ProjectsAndUsersDto> ProjectsAndUsers { get; set; }
     }
 }

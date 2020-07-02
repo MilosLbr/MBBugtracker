@@ -9,36 +9,33 @@ using DataModels;
 using MbBugtracker.Data;
 using AutoMapper;
 using DataModels.ViewModels;
+using MbBugtracker.Services.Interfaces;
 
 namespace MbBugtracker.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProjectsController(ApplicationDbContext context, IMapper mapper)
+        public ProjectsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Projects.ToListAsync());
+            return View(await _unitOfWork.Projects.GetAll());
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var project = await _unitOfWork.Projects
+                .GetById(id);
 
-            var project = await _context.Projects
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
                 return NotFound();
@@ -61,34 +58,25 @@ namespace MbBugtracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(project);
-                await _context.SaveChangesAsync();
+                _unitOfWork.Projects.Add(project);
+                await _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
         }
 
         // GET: Projects/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var project = await _unitOfWork.Projects.GetById(id);
 
-            var project = await _context.Projects.FindAsync(id);
             if (project == null)
             {
                 return NotFound();
             }
 
             var projectEditViewModel = _mapper.Map<ProjectEditViewModel>(project);
-            projectEditViewModel.SelectedUserIds = new List<string>();
 
-            foreach (var projUser in projectEditViewModel.ProjectsAndUsers)
-            {
-                projectEditViewModel.SelectedUserIds.Add(projUser.ApplicationUserId);
-            }
             return View(projectEditViewModel);
         }
 
@@ -106,54 +94,37 @@ namespace MbBugtracker.Controllers
             }
             else
             {
-                try
+                var projectToEdit = await _unitOfWork.Projects.GetById(projectEditViewModel.Id);
+
+                _mapper.Map(projectEditViewModel, projectToEdit);
+
+                // update ProjectsAndUsers table
+                var projectUsers = new List<ProjectsAndUsers>();
+
+                foreach (var userId in projectEditViewModel.SelectedUserIds)
                 {
-                    var projectToEdit = await _context.Projects.FindAsync(projectEditViewModel.Id);
-
-                    _mapper.Map(projectEditViewModel, projectToEdit);
-
-                    // update ProjectsAndUsers table
-                    var projectUsers = new List<ProjectsAndUsers>();
-
-                    foreach (var userId in projectEditViewModel.SelectedUserIds)
+                    var projectUser = new ProjectsAndUsers
                     {
-                        var projectUser = new ProjectsAndUsers
-                        {
-                            ApplicationUserId = userId,
-                        };
+                        ApplicationUserId = userId,
+                        ProjectId = id
+                    };
 
-                        projectUsers.Add(projectUser);
-                    }
-
-                    projectToEdit.ProjectsAndUsers = projectUsers;
-
-                    await _context.SaveChangesAsync();
+                    projectUsers.Add(projectUser);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProjectExists(projectEditViewModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                projectToEdit.ProjectsAndUsers = projectUsers;
+
+                await _unitOfWork.Complete();
+                
                 return RedirectToAction(nameof(Index));
             }  
         }
 
         // GET: Projects/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var project = await _unitOfWork.Projects.GetById(id);
 
-            var project = await _context.Projects
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (project == null)
             {
                 return NotFound();
@@ -167,15 +138,11 @@ namespace MbBugtracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var project = await _context.Projects.FindAsync(id);
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
+            var project = await _unitOfWork.Projects.GetById(id);
+            _unitOfWork.Projects.Remove(project);
+            await _unitOfWork.Complete();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProjectExists(int id)
-        {
-            return _context.Projects.Any(e => e.Id == id);
-        }
     }
 }
