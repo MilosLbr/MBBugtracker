@@ -8,6 +8,7 @@ using DataModels;
 using DataModels.ViewModels;
 using DTOs;
 using MbBugtracker.Data;
+using MbBugtracker.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,12 @@ namespace MbBugtracker.Controllers.Api
     [Produces("application/json")]
     public class ProjectsApiController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public ProjectsApiController(ApplicationDbContext context, IMapper mapper)
+        public ProjectsApiController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -51,9 +52,16 @@ namespace MbBugtracker.Controllers.Api
             projectToCreate.ProjectsAndUsers = projectUsers;
 
 
-            await _context.Projects.AddAsync(projectToCreate);
-            await _context.SaveChangesAsync();
-            return Ok();
+            _unitOfWork.Projects.Add(projectToCreate);
+            
+            if (await _unitOfWork.Complete() >=1)
+            {
+                return Ok("Created!");
+            }
+            else
+            {
+                return BadRequest("An error happened while creating new project!");
+            }
         }
     }
 }

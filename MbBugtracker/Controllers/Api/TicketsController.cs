@@ -18,13 +18,11 @@ namespace MbBugtracker.Controllers.Api
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public TicketsController(ApplicationDbContext context, IMapper mapper, IUnitOfWork unitOfWork)
+        public TicketsController(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            _context = context;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
@@ -32,17 +30,19 @@ namespace MbBugtracker.Controllers.Api
         
         public async Task<IActionResult> GetTickets()
         {
-            var tickets = await _context.Tickets.OrderBy(t=> t.TicketStatusId).ThenByDescending(t => t.TicketPriorityId).ToListAsync();
+            var tickets = await _unitOfWork.Tickets.GetAll();
+            // order by status then by priority
+            tickets = tickets.OrderBy(t => t.TicketStatusId).ThenByDescending(t => t.TicketPriorityId).ToList();
 
-            var ticketList = _mapper.Map<List<TicketListDto>>(tickets);
+            var ticketListDto = _mapper.Map<List<TicketListDto>>(tickets);
 
-            return Ok(ticketList);
+            return Ok(ticketListDto);
         }
 
         [HttpPut("updateStatus")]
         public async Task<IActionResult> UpdateTicketStatus(TicketStatusUpdateDto ticketStatusUpdateDto)
         {
-            var ticketFromDb = _context.Tickets.Find(ticketStatusUpdateDto.TicketId);
+            var ticketFromDb = await _unitOfWork.Tickets.GetById(ticketStatusUpdateDto.TicketId);
 
             if(ticketFromDb == null)
             {
@@ -51,9 +51,9 @@ namespace MbBugtracker.Controllers.Api
 
             ticketFromDb.TicketStatusId = ticketStatusUpdateDto.TicketStatusId;
 
-            if(await _context.SaveChangesAsync() >= 1)
+            if(await _unitOfWork.Complete() >= 1)
             {
-                var ticketStatusToReturn = await _context.TicketStatuses.FindAsync(ticketStatusUpdateDto.TicketStatusId);
+                var ticketStatusToReturn = await _unitOfWork.TicketStatuses.GetById(ticketStatusUpdateDto.TicketStatusId);
 
                 var ticketStatusToReturnDto = _mapper.Map<TicketStatusDto>(ticketStatusToReturn);
                 return Ok(ticketStatusToReturnDto);

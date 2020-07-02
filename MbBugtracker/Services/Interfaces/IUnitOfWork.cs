@@ -8,6 +8,10 @@ namespace MbBugtracker.Services.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         ITicketRepository Tickets { get; }
+        ITicketStatusRepository TicketStatuses { get; }
+        ITicketResolutionRepository TicketResolutions { get; }
+        ITicketCommentRepository TicketComments { get; }
+        IProjectRepository Projects { get; }
         Task<int> Complete();
     }
 }

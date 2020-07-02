@@ -19,12 +19,12 @@ namespace MbBugtracker.Controllers.Api
     [ApiController]
     public class ApplicationUserApiController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public ApplicationUserApiController(ApplicationDbContext context, IMapper mapper)
+        public ApplicationUserApiController(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
-            _context = context;
+            _userManager = userManager;
             _mapper = mapper;
         }
 
@@ -34,7 +34,7 @@ namespace MbBugtracker.Controllers.Api
         {
             var rgx = new Regex(userName, RegexOptions.IgnoreCase);
 
-            var appUsers = await _context.Users.ToListAsync();
+            var appUsers = await _userManager.Users.ToListAsync();
 
             var usersDto = _mapper.Map<IEnumerable<ApplicationUserBasicInfoDto>>(appUsers);
             var matchedUsers = usersDto.Where(u => rgx.IsMatch(u.UserName) || rgx.IsMatch(u.Email));

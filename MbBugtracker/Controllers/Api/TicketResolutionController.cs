@@ -8,6 +8,7 @@ using DataModels;
 using DataModels.EnumConstants;
 using DTOs;
 using MbBugtracker.Data;
+using MbBugtracker.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,21 +19,21 @@ namespace MbBugtracker.Controllers.Api
     [ApiController]
     public class TicketResolutionController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TicketResolutionController(ApplicationDbContext applicationDbContext, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public TicketResolutionController(IMapper mapper, UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
-            _context = applicationDbContext;
             _mapper = mapper;
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("{ticketId}")]
         public async Task<IActionResult> GetResolutionForTicket(int ticketId)
         {
-            var ticketFromDb = await _context.Tickets.FindAsync(ticketId);
+            var ticketFromDb = await _unitOfWork.Tickets.GetById(ticketId);
 
             if(ticketFromDb == null)
             {
@@ -51,7 +52,7 @@ namespace MbBugtracker.Controllers.Api
                 return BadRequest("Comment is required for resolving the ticket!");
             }
 
-            var ticketFromDb = await _context.Tickets.FindAsync(ticketId);
+            var ticketFromDb = await _unitOfWork.Tickets.GetById(ticketId);
 
             if (ticketFromDb == null)
             {
@@ -75,9 +76,9 @@ namespace MbBugtracker.Controllers.Api
 
             ticketFromDb.TicketStatusId = ticketResolution.TicketStatusId;
 
-            _context.TicketResolution.Add(resolution);
+            _unitOfWork.TicketResolutions.Add(resolution);
 
-            if(await _context.SaveChangesAsync() >=1)
+            if(await _unitOfWork.Complete() >=1)
             {
                 return Ok("Created new ticket resolution!");
             }
@@ -85,8 +86,6 @@ namespace MbBugtracker.Controllers.Api
             {
                 return BadRequest("An erron happened while saving new ticket resolution!");
             }
-
-
         }
     }
 }

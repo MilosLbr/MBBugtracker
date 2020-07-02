@@ -12,13 +12,21 @@ namespace MbBugtracker.Services.Implementation
     {
         private readonly ApplicationDbContext _context;
         public ITicketRepository Tickets { get; set; }
+        public ITicketStatusRepository TicketStatuses { get; set; }
+        public ITicketResolutionRepository TicketResolutions { get; set; }
+        public ITicketCommentRepository TicketComments { get; set; }
+        public IProjectRepository Projects { get; set; }
+
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
             Tickets = new TicketRepository(_context);
+            TicketStatuses = new TicketStatusRepository(_context);
+            TicketResolutions = new TicketResolutionRepository(_context);
+            TicketComments = new TicketCommentRepository(_context);
+            Projects = new ProjectRepository(_context);
         }
-
 
         public async Task<int> Complete()
         {
