@@ -30,6 +30,10 @@ namespace MbBugtracker.Services.Implementation
             return await Entities.ToListAsync();
         }
 
+        public IEnumerable<TEntity> GetAllSynchronously()
+        {
+            return Entities.ToList();
+        }
         public IQueryable<TEntity> Filter(Expression<Func<TEntity, bool>> predicate)
         {
             return Entities.Where(predicate);

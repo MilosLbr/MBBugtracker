@@ -11,7 +11,10 @@ namespace MbBugtracker.Services.Interfaces
         ITicketStatusRepository TicketStatuses { get; }
         ITicketResolutionRepository TicketResolutions { get; }
         ITicketCommentRepository TicketComments { get; }
+        ITicketPriorityRepository TicketPriorities { get; }
+        ITicketTypeRepository TicketTypes { get; }
         IProjectRepository Projects { get; }
+        
         Task<int> Complete();
     }
 }

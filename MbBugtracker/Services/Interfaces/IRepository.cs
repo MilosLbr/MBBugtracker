@@ -11,6 +11,7 @@ namespace MbBugtracker.Services.Interfaces
         // read
         Task<TEntity> GetById(int Id);
         Task<IEnumerable<TEntity>> GetAll();
+        IEnumerable<TEntity> GetAllSynchronously();
         IQueryable<TEntity> Filter(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
 

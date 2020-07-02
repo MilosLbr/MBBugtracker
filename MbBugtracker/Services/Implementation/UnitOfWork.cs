@@ -15,6 +15,8 @@ namespace MbBugtracker.Services.Implementation
         public ITicketStatusRepository TicketStatuses { get; set; }
         public ITicketResolutionRepository TicketResolutions { get; set; }
         public ITicketCommentRepository TicketComments { get; set; }
+        public ITicketPriorityRepository TicketPriorities { get; set; }
+        public ITicketTypeRepository TicketTypes { get; set; }
         public IProjectRepository Projects { get; set; }
 
 
@@ -25,6 +27,8 @@ namespace MbBugtracker.Services.Implementation
             TicketStatuses = new TicketStatusRepository(_context);
             TicketResolutions = new TicketResolutionRepository(_context);
             TicketComments = new TicketCommentRepository(_context);
+            TicketPriorities = new TicketPriorityRepository(_context);
+            TicketTypes = new TicketTypeRepository(_context);
             Projects = new ProjectRepository(_context);
         }
 
