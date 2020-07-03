@@ -38,5 +38,6 @@ namespace DataModels
         public virtual TicketResolution TicketResolution { get; set; }
 
         public virtual ICollection<TicketComment> TicketComments { get; set; }
+        public virtual ICollection<TicketActivityLog> TicketActivityLogs { get; set; }
     }
 }

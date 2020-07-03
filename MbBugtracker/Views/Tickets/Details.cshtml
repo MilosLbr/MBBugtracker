@@ -50,13 +50,17 @@
 
     </div>
 
-    @if (ViewBag.userId == Model.ApplicationUser.Id)
-    {
+    
     <div class="row pl-4">
         <a style="font-size:0.9rem;" class="mt-2 mr-4 btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <a style="font-size:0.9rem;" class="mt-2 btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-    </div>
-    }
+
+        @if (ViewBag.userId == Model.ApplicationUser.Id)
+        { 
+        //The user who created is allowed to delete
+            <a style="font-size:0.9rem;" class="mt-2 btn btn-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        }
+        </div>
+    
 </div>
  
 <div class="ticketDescription mb-5">
