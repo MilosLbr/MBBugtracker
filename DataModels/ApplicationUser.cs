@@ -16,6 +16,7 @@ namespace DataModels
 
         public virtual ICollection<Ticket> Tickets { get; set; }
         public virtual ICollection<ProjectsAndUsers> ProjectsAndUsers { get; set; }
+        public virtual ICollection<TicketActivityLog> TicketActivityLogs { get; set; }
 
     }
 }
