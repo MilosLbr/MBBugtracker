@@ -14,7 +14,6 @@
         commentHeader.text(cmt.createdBy + ":");
         commentParagraph.text(cmt.content);
         commentFooter.text(moment(cmt.dateAdded).format("DD.MM.YYYY. HH:mm:ss"));
-        commentFooter.text(moment(cmt.dateAdded).format("DD.MM.YYYY. HH:mm:ss"));
 
         commentElem.append(commentHeader, commentParagraph, commentFooter);
         commentContainerDiv.append(commentElem);

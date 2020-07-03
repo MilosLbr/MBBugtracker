@@ -11,6 +11,7 @@ using DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MbBugtracker.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace MbBugtracker.Controllers.Api
 {
@@ -20,11 +21,13 @@ namespace MbBugtracker.Controllers.Api
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TicketsController(IMapper mapper, IUnitOfWork unitOfWork)
+        public TicketsController(IMapper mapper, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         
@@ -50,20 +53,54 @@ namespace MbBugtracker.Controllers.Api
             }
 
             ticketFromDb.TicketStatusId = ticketStatusUpdateDto.TicketStatusId;
+            var ticketActivityLog = await LogStatusChange(ticketStatusUpdateDto.TicketId);
 
             if(await _unitOfWork.Complete() >= 1)
             {
                 var ticketStatusToReturn = await _unitOfWork.TicketStatuses.GetById(ticketStatusUpdateDto.TicketStatusId);
 
-                var ticketStatusToReturnDto = _mapper.Map<TicketStatusDto>(ticketStatusToReturn);
-                return Ok(ticketStatusToReturnDto);
+                var activityAndStatusDto = PrepareActivityAndStatusDto(ticketStatusToReturn, ticketActivityLog);
+
+                return Ok(activityAndStatusDto);
             }
             else
             {
                 return BadRequest("An error has occured while updating ticket status!");
             }
+        }
 
+        private async Task<TicketActivityLog> LogStatusChange(int ticketId)
+        {
+            var appUser = await _userManager.GetUserAsync(User);
+            var appUserId = appUser.Id;
 
+            var activityLog = new TicketActivityLog()
+            {
+                ActivityDate = DateTime.Now,
+                ActivityDescription = "Edited TicketStatusId",
+                ApplicationUserId = appUserId,
+                TicketId = ticketId,
+                ApplicationUser = appUser
+            };
+
+            _unitOfWork.TicketActivityLogs.Add(activityLog);
+
+            return activityLog;
+        }
+
+        private ActivityAndStatusDto PrepareActivityAndStatusDto(TicketStatus ticketStatusToReturn, TicketActivityLog ticketActivityLog)
+        {
+            var ticketStatusToReturnDto = _mapper.Map<TicketStatusDto>(ticketStatusToReturn);
+
+            var ticketActivityLogToReturnDto = _mapper.Map<TicketActivityLogDto>(ticketActivityLog);
+
+            var activityAndStatusDto = new ActivityAndStatusDto
+            {
+                TicketStatusDto = ticketStatusToReturnDto,
+                TicketActivityLogDto = ticketActivityLogToReturnDto
+            };
+
+            return activityAndStatusDto;
         }
     }
 }

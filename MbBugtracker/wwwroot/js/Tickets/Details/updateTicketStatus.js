@@ -24,7 +24,9 @@ function updateTicketStatus(ticketId) {
                 replaceClassOnSelectListElement(selectList, className);
 
                 currentSelectListValue = $("#TicketStatus_Id").val();
-                $("#ticketStatusTableData").text(data.statusName);
+                $("#ticketStatusTableData").text(data.ticketStatusDto.statusName);
+
+                prependActivityLogList(data.ticketActivityLogDto);
             })
             .fail((er) => {
                 toastr.error("An error has ocured!");
@@ -65,4 +67,25 @@ function replaceClassOnSelectListElement(selectList, className) {
 
     selectList.removeClass();
     selectList.addClass(classList.join(" "));
+}
+
+function prependActivityLogList(activityLogDto) {
+    let blockquote = $("<blockquote></blockquote>");
+    let bcParagraphContent = $("<p></p>");
+    let userNameStrongElem = $("<strong></strong>");
+    let bcFooter = $("<footer></footer>");
+
+    blockquote.addClass("blockquote p-2 ml-4");
+    bcFooter.addClass("blockquote-footer");
+
+    userNameStrongElem.text(activityLogDto.applicationUser.userName);
+    let description = " has: " + activityLogDto.activityDescription;
+
+    bcParagraphContent.append(userNameStrongElem, description);
+
+    bcFooter.text(moment(activityLogDto.activityDate).format("DD.MM.YYYY. HH:mm:ss"));
+
+    blockquote.append(bcParagraphContent, bcFooter);
+
+    $("#nav-activity").prepend(blockquote);
 }

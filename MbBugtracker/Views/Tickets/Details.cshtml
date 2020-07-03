@@ -129,6 +129,7 @@
     </div>
 
     <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+
         <div class="tab-pane fade show active" id="nav-comments" role="tabpanel" aria-labelledby="nav-comments-tab">
             <div id="commentContainer">
                 @if (Model.TicketComments != null)
@@ -198,20 +199,23 @@
         </div>
 
         <div class="tab-pane fade" id="nav-activity" role="tabpanel" aria-labelledby="nav-activity-tab">
-            @if(Model.TicketActivityLogs != null)
+            @if (Model.TicketActivityLogs.Count() > 0)
             {
-                @foreach(var log in Model.TicketActivityLogs)
+                @foreach (var log in Model.TicketActivityLogs)
                 {
                     <blockquote class="blockquote p-2 ml-4">
-                        <h5></h5>
                         <p>
-                            <strong>@log.ApplicationUser.UserName</strong> has: @log.ActivityDescription
+                            <strong>@log.ApplicationUser.UserName</strong> has:                     @log.ActivityDescription
                         </p>
                         <footer class="blockquote-footer">
                             @log.ActivityDate.ToString("dd.MM.yyyy. HH:mm:ss")
                         </footer>
                     </blockquote>
                 }
+            }
+            else
+            {
+                <p>No activites have been logged...</p>
             }
         </div>
     </div>
