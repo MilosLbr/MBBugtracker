@@ -55,6 +55,7 @@ namespace MbBugtracker.Controllers
             ticketViewModel.TicketStatuses = await _unitOfWork.TicketStatuses.GetAll();
 
             ticketViewModel.TicketComments = ticketViewModel.TicketComments.OrderByDescending(tc => tc.DateAdded);
+            ticketViewModel.TicketActivityLogs = ticketViewModel.TicketActivityLogs.OrderByDescending(tl => tl.ActivityDate);
 
             return View(ticketViewModel);
         }
@@ -126,7 +127,9 @@ namespace MbBugtracker.Controllers
             if (ModelState.IsValid)
             {
                 var ticketToUpdate = await _unitOfWork.Tickets.GetById(ticketViewModel.Id);
-                
+
+                LogEditActivity(ticketViewModel, ticketToUpdate);
+
                 _mapper.Map(ticketViewModel, ticketToUpdate);
                 ticketToUpdate.UpdatedOn = DateTime.Now;
                 ticketToUpdate.UpdatedByUserId = userId;
@@ -144,10 +147,15 @@ namespace MbBugtracker.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var ticket = await _unitOfWork.Tickets.GetById(id);
+            var userId = _userManager.GetUserId(User);
 
             if (ticket == null)
             {
                 return NotFound();
+            }
+            if(ticket.ApplicationUserId != userId)
+            {
+                return RedirectToAction(nameof(Details), new { Id = ticket.Id });
             }
 
             return View(ticket);
@@ -173,6 +181,56 @@ namespace MbBugtracker.Controllers
             ticketCreateEditViewModel.AllTicketPriorities = _unitOfWork.TicketPriorities.GetAllSynchronously();
             ticketCreateEditViewModel.AllTicketStatuses = _unitOfWork.TicketStatuses.GetAllSynchronously();
             ticketCreateEditViewModel.AllTicketTypes = _unitOfWork.TicketTypes.GetAllSynchronously();
+        }
+
+        private void LogEditActivity(TicketCreateEditViewModel newValues, Ticket oldValues)
+        {
+            string editedProperties = GetEditedProperties(newValues, oldValues);
+
+            if(editedProperties != null)
+            {
+                var activityLog = new TicketActivityLog()
+                {
+                    ActivityDate = DateTime.Now,
+                    ActivityDescription = editedProperties,
+                    TicketId = oldValues.Id,
+                    ApplicationUserId = _userManager.GetUserId(User)
+                };
+
+                _unitOfWork.TicketActivityLogs.Add(activityLog);
+            }            
+
+        }
+
+        private string GetEditedProperties(TicketCreateEditViewModel newValues, Ticket oldValues)
+        {
+            var properties = new List<string>
+            {
+                "Title", "Description", "DueDate",
+                "AssignedTo", "ProjectId", "TicketPriorityId", "TicketStatusId",
+                "TicketTypeId"
+            };
+
+            var editedProperties = new List<string>();
+
+            foreach (var prop in properties)
+            {
+                var oldValue = oldValues.GetType().GetProperty(prop).GetValue(oldValues, null);
+                var newValue = newValues.GetType().GetProperty(prop).GetValue(newValues, null);
+
+                if(oldValue.ToString() != newValue.ToString())
+                {
+                    editedProperties.Add(prop);
+                }
+            }            
+
+            if(editedProperties.Count > 0)
+            {
+                var result = string.Join(", ", editedProperties);
+
+                return "Edited " + result;
+            }
+            return null;
         }
     }
 }

@@ -30,6 +30,9 @@ namespace Helpers.AutoMapper
             // ticket comment
             CreateMap<TicketComment, TicketCommentListDto>().ReverseMap();
 
+            // activity log mapping
+            CreateMap<TicketActivityLog, TicketActivityLogDto>();
+
             //AppUser mappings
             CreateMap<ApplicationUser, ApplicationUserBasicInfoDto>();
             CreateMap<ApplicationUser, ApplicationUserViewModel>();

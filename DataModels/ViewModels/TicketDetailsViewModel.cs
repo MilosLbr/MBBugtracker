@@ -39,5 +39,6 @@ namespace DataModels.ViewModels
 
         public IEnumerable<TicketCommentListDto> TicketComments { get; set; }
         public IEnumerable<TicketStatus> TicketStatuses { get; set; }
+        public IEnumerable<TicketActivityLogDto> TicketActivityLogs { get; set; }
     }
 }

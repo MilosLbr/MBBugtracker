@@ -198,7 +198,21 @@
         </div>
 
         <div class="tab-pane fade" id="nav-activity" role="tabpanel" aria-labelledby="nav-activity-tab">
-            Activity log will go here...
+            @if(Model.TicketActivityLogs != null)
+            {
+                @foreach(var log in Model.TicketActivityLogs)
+                {
+                    <blockquote class="blockquote p-2 ml-4">
+                        <h5></h5>
+                        <p>
+                            <strong>@log.ApplicationUser.UserName</strong> has: @log.ActivityDescription
+                        </p>
+                        <footer class="blockquote-footer">
+                            @log.ActivityDate.ToString("dd.MM.yyyy. HH:mm:ss")
+                        </footer>
+                    </blockquote>
+                }
+            }
         </div>
     </div>
 </div>
