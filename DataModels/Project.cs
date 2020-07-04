@@ -14,6 +14,9 @@ namespace DataModels
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; } // ProjectOwner
 
+        public int ProjectStatusId { get; set; }
+        public virtual ProjectStatus ProjectStatus { get; set; }
+
         public virtual ICollection<Ticket> ProjectTickets { get; set; }
         public virtual ICollection<ProjectsAndUsers> ProjectsAndUsers { get; set; }
 

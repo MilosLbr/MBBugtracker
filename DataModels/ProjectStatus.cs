@@ -8,5 +8,6 @@ namespace DataModels
     {
         public int Id { get; set; }
         public string StatusName { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
     }
 }
