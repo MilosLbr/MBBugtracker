@@ -27,7 +27,7 @@ namespace MbBugtracker.Data
         public DbSet<TicketResolution> TicketResolution { get; set; }
         public DbSet<TicketComment> TicketComments { get; set; }
         public DbSet<TicketActivityLog> TicketActivityLogs { get; set; }
-
+        public DbSet<ProjectStatus> ProjectStatuses { get; set; }
 
         // Override onmodel creating
         protected override void OnModelCreating(ModelBuilder modelBuilder)
