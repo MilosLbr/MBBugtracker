@@ -50,7 +50,7 @@ namespace MbBugtracker.Controllers.Api
                 projectUsers.Add(projectUser);
             }
             projectToCreate.ProjectsAndUsers = projectUsers;
-
+            projectToCreate.StartDate = DateTime.Now;
 
             _unitOfWork.Projects.Add(projectToCreate);
             
