@@ -11,6 +11,7 @@ using MbBugtracker.Data;
 using MbBugtracker.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,11 +24,13 @@ namespace MbBugtracker.Controllers.Api
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProjectsApiController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProjectsApiController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpPost("create")]
@@ -50,7 +53,9 @@ namespace MbBugtracker.Controllers.Api
                 projectUsers.Add(projectUser);
             }
             projectToCreate.ProjectsAndUsers = projectUsers;
-            projectToCreate.StartDate = DateTime.Now;
+
+            var currentUserId = _userManager.GetUserId(User);
+            projectToCreate.ApplicationUserId = currentUserId;
 
             _unitOfWork.Projects.Add(projectToCreate);
             
