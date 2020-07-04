@@ -10,6 +10,7 @@ using MbBugtracker.Data;
 using AutoMapper;
 using DataModels.ViewModels;
 using MbBugtracker.Services.Interfaces;
+using DTOs;
 
 namespace MbBugtracker.Controllers
 {
@@ -75,8 +76,11 @@ namespace MbBugtracker.Controllers
             {
                 return NotFound();
             }
-
+            var projectStatuses = await _unitOfWork.ProjectStatuses.GetAll();
+            var projectStatusesDto = _mapper.Map<IEnumerable<ProjectStatusDto>>(projectStatuses);
+            
             var projectEditViewModel = _mapper.Map<ProjectEditViewModel>(project);
+            projectEditViewModel.ProjectStatuses = projectStatusesDto;
 
             return View(projectEditViewModel);
         }

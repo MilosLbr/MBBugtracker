@@ -15,7 +15,9 @@ namespace DataModels.ViewModels
         public string ProjectName { get; set; }
         [Required]
         public string Description { get; set; }
-
+        [Required]
+        public int ProjectStatusId { get; set; }
+        public IEnumerable<ProjectStatusDto> ProjectStatuses { get; set; }
 
         [Required]
         public List<string> SelectedUserIds { get; set; }

@@ -29,6 +29,10 @@
                 <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" placeholder="Search developers..." autocomplete="off" />
             </div>
             <div class="form-group">
+                <label asp-for="ProjectStatusId" class="control-label">Project Status:</label>
+                @Html.DropDownListFor(m=> m.ProjectStatusId, new SelectList(Model.ProjectStatuses, "Id", "StatusName"), null, new { @class = "form-control"})
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -129,6 +133,7 @@
                 projectEditViewModel["projectName"] = $("#projectName").val();
                 projectEditViewModel["description"] = $("#description").val();
                 projectEditViewModel["selectedUserIds"] = selectedUserIds;
+                projectEditViewModel["projectStatusId"] = $("#ProjectStatusId").val();
 
                 $.ajax({
                     url: "@Url.Action("Edit", "Projects")",
