@@ -161,3 +161,9 @@ div#postCommentDiv{
     max-height: 0;
     overflow: hidden;
 }
+
+.projectDescription {
+    padding: 10px;
+    border-radius: 12px;
+    background-color: #ededed;
+}

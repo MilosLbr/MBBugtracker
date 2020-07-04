@@ -11,6 +11,7 @@ using AutoMapper;
 using DataModels.ViewModels;
 using MbBugtracker.Services.Interfaces;
 using DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace MbBugtracker.Controllers
 {
@@ -18,11 +19,13 @@ namespace MbBugtracker.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProjectsController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProjectsController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         // GET: Projects
@@ -41,6 +44,8 @@ namespace MbBugtracker.Controllers
             {
                 return NotFound();
             }
+            var currentUserId = _userManager.GetUserId(User);
+            ViewBag.userId = currentUserId;
 
             var projectDetailsViewModel = _mapper.Map<ProjectDetailsViewModel>(project);
             return View(projectDetailsViewModel);
@@ -133,6 +138,11 @@ namespace MbBugtracker.Controllers
             if (project == null)
             {
                 return NotFound();
+            }
+            var currentUserId = _userManager.GetUserId(User);
+            if(currentUserId != project.ApplicationUserId)
+            {
+                return RedirectToAction(nameof(Details), new { Id = project.Id });
             }
 
             return View(project);
