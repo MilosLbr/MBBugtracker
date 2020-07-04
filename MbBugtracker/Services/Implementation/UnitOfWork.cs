@@ -19,6 +19,7 @@ namespace MbBugtracker.Services.Implementation
         public ITicketTypeRepository TicketTypes { get; set; }
         public IProjectRepository Projects { get; set; }
         public ITicketActivityLogRepository TicketActivityLogs { get; set; }
+        public IProjectStatusRepository ProjectStatuses { get; set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -31,6 +32,7 @@ namespace MbBugtracker.Services.Implementation
             TicketTypes = new TicketTypeRepository(_context);
             Projects = new ProjectRepository(_context);
             TicketActivityLogs = new TicketActivityLogRepository(_context);
+            ProjectStatuses = new ProjectStatusRepository(_context);
         }
 
         public async Task<int> Complete()

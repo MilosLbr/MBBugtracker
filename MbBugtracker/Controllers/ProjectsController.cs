@@ -46,8 +46,9 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Projects/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.projectStatuses = await _unitOfWork.ProjectStatuses.GetAll();
             return View();
         }
 

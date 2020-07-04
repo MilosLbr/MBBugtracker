@@ -9,6 +9,7 @@ namespace DTOs
         public int Id { get; set; }
         public string ProjectName { get; set; }
         public string Description { get; set; }
+        public int ProjectStatusId { get; set; }
         public DateTime StartDate { get; set; } = DateTime.Now;
         public List<string> SelectedUserIds { get; set; }
     }

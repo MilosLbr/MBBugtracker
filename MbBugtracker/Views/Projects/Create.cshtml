@@ -22,6 +22,18 @@
                 <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" placeholder="Search developers..." autocomplete="off"/>
             </div>
             <div class="form-group">
+                <label for="projectStatuses">Project Status:</label>
+                @Html.DropDownList("ProjectStatusId",
+                new SelectList(ViewBag.projectStatuses,"Id", "StatusName",1),
+                null,
+                   new
+                   {
+                       @class="form-control",
+                       id = "projectStatuses"
+                   }
+                )
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -115,6 +127,7 @@
                 projectToCreate["projectName"] = $("#projectName").val();
                 projectToCreate["description"] = $("#description").val();
                 projectToCreate["selectedUserIds"] = selectedUserIds;
+                projectToCreate["projectStatusId"] = $("#projectStatuses").val();
 
                 $.ajax({
                     url: "/api/projects/create",
