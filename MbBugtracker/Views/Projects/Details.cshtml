@@ -1,21 +1,28 @@
 ﻿@model DataModels.ViewModels.ProjectDetailsViewModel
+@using DataModels.EnumConstants
 
 @{
     ViewData["Title"] = "Details for " + Model.ProjectName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3 class="mb-2" >
+<h3 class="mb-2">
     @Model.ProjectName
 </h3>
 
 <hr />
 
+<p class="d-none" id="userId" data-userid="@ViewBag.userId">
+
+</p>
+
 <div>
     <div>
-        <div><p>
-            Created by <span class="text-info">@Model.ApplicationUser.UserName</span>.
-        </p></div>
+        <div>
+            <p>
+                Created by <span class="text-info">@Model.ApplicationUser.UserName</span>.
+            </p>
+        </div>
         <p>
             Start date : <span class="text-danger">@Model.StartDate.ToString("dd.MM.yyyy.")</span>
         </p>
@@ -41,7 +48,7 @@
 
     <div class=" p-2">
         <h5>
-            Developers working on this project:         
+            Developers working on this project:
         </h5>
         <div class="col-12">
             <ul>
@@ -54,9 +61,43 @@
     </div>
 </div>
 
-<hr class="mb-4"/>
+<div id="filterButtons">
+    <div class="d-flex justify-content-sm-around">
+        <button class="btn btn-warning" id="getActiveTicketsBtn">
+            Active (@Model.ProjectTickets.Where(t => t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed).Count())
+        </button>
+        <button class="btn btn-success" id="getClosedTicketsBtn">
+            Closed (@Model.ProjectTickets.Where(t => t.TicketStatus.Id == (int)EnumConstants.TicketStatuses.Closed).Count())
+        </button>
+        <button class="btn btn-danger" id="getOverdueTicketsBtn">
+            Overdue (@Model.ProjectTickets.Where(t =>
+                       {
+                           var now = DateTime.Now;
+                           var result = DateTime.Compare(now.Date, t.DueDate.Date);
+
+                           return result > 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed; // count only tickets that are not closed (status 2)
+                       }).Count())
+        </button>
+        <button title="Due on: @DateTime.Now.AddDays(7).ToShortDateString()" class="btn btn-info" id="getTikcetsDueInSeven">
+            Due in next 7 days (@Model.ProjectTickets.Where(t =>
+                                {
+                                var now = DateTime.Now;
+                                var sevenDaysFromNow = DateTime.Now.AddDays(7);
+                                var compareNow = DateTime.Compare(t.DueDate.Date, now.Date);
+                                var compareSevenDays = DateTime.Compare(t.DueDate.Date, sevenDaysFromNow.Date);
+
+                                return compareNow >= 0 && compareSevenDays <= 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed;
+                                }).Count())
+        </button>
+        <button class="btn btn-primary" id="getAllTicketsBtn">
+            All tickets (@Model.ProjectTickets.Count())
+        </button>
+    </div>
+</div>
+
+<hr class="mb-4" />
 <div id="ticketsTableContainer">
-    <table id="ticketsForThisProject" class="table table-striped">
+    <table id="ticketsForThisProject" class="table table-striped ticketListContainer">
         <thead class="table-dark table-bordered">
             <tr>
                 <th>Ticket</th>
@@ -65,12 +106,73 @@
                 <th>Status</th>
                 <th>Type</th>
                 <th>Created on</th>
-                <th>Due date</th>   
+                <th>Due date</th>
             </tr>
         </thead>
     </table>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            let initialTicketsToDisplay = @Html.Raw(Json.Serialize(Model.ProjectTickets));
+
+            fillTableWithData(initialTicketsToDisplay);
+
+            $("#getActiveTicketsBtn").on("click", function () {
+                let ticketTableData = @Html.Raw(Json.Serialize(Model.ProjectTickets.Where(t => t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed)));
+
+                fillTableWithData(ticketTableData);
+            });
+
+            $("#getClosedTicketsBtn").on("click", function () {
+                let ticketTableData = @Html.Raw(Json.Serialize(Model.ProjectTickets.Where(t => t.TicketStatus.Id == (int)EnumConstants.TicketStatuses.Closed)));
+
+                fillTableWithData(ticketTableData);
+            });
+
+            $("#getOverdueTicketsBtn").on("click", function () {
+                let ticketTableData = @Html.Raw(Json.Serialize(@Model.ProjectTickets.Where(t =>
+                    {
+                        var now = DateTime.Now;
+                        var result = DateTime.Compare(now.Date, t.DueDate.Date);
+
+                        return result > 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed;
+                    }).ToList()));
+
+                fillTableWithData(ticketTableData);
+
+            });
+
+            $("#getTikcetsDueInSeven").on("click", function () {
+                let ticketTableData = @Html.Raw(Json.Serialize(Model.ProjectTickets.Where(t =>
+                    {
+                        var now = DateTime.Now;
+                        var sevenDaysFromNow = DateTime.Now.AddDays(7);
+                        var compareNow = DateTime.Compare(t.DueDate.Date, now.Date);
+                        var compareSevenDays = DateTime.Compare(t.DueDate.Date, sevenDaysFromNow.Date);
+
+                        return compareNow >= 0 && compareSevenDays <= 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed;
+                    }).ToList()));
+
+                fillTableWithData(ticketTableData);
+            });
+
+            $("#getAllTicketsBtn").on("click", function () {
+                fillTableWithData(initialTicketsToDisplay);
+            })
+
+
+        });
+    </script>
+    <script src="~/js/Projects/Details/fillTableWithData.js"></script>
+
+}

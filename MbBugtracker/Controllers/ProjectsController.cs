@@ -48,6 +48,10 @@ namespace MbBugtracker.Controllers
             ViewBag.userId = currentUserId;
 
             var projectDetailsViewModel = _mapper.Map<ProjectDetailsViewModel>(project);
+
+            //order 
+            projectDetailsViewModel.ProjectTickets = projectDetailsViewModel.ProjectTickets.OrderBy(t => t.TicketStatus.Id).ThenByDescending(t => t.TicketPriority.Id).ToList();
+
             return View(projectDetailsViewModel);
         }
 

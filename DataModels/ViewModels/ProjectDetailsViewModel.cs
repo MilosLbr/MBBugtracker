@@ -20,7 +20,7 @@ namespace DataModels.ViewModels
         public int ProjectStatusId { get; set; }
         public virtual ProjectStatusDto ProjectStatus { get; set; }
 
-        public IEnumerable<Ticket> ProjectTickets { get; set; }
+        public IEnumerable<TicketListDto> ProjectTickets { get; set; }
         public IEnumerable<ProjectsAndUsersViewModel> AssignedDevelopers { get; set; }
     }
 }
