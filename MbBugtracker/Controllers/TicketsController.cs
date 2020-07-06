@@ -167,6 +167,10 @@ namespace MbBugtracker.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var ticket = await _unitOfWork.Tickets.GetById(id);
+
+            // clear log
+            _unitOfWork.TicketActivityLogs.RemoveRange(ticket.TicketActivityLogs);
+
             _unitOfWork.Tickets.Remove(ticket);
 
             await _unitOfWork.Complete();
