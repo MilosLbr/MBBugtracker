@@ -35,7 +35,23 @@ namespace MbBugtracker.Controllers.Api
         {
             var tickets = await _unitOfWork.Tickets.GetAll();
             // order by status then by priority
-            tickets = tickets.OrderBy(t => t.TicketStatusId).ThenByDescending(t => t.TicketPriorityId).ToList();
+            tickets = tickets
+                .OrderBy(t => {
+                    if(t.TicketStatusId == 2)
+                    {
+                        return 5;
+                    }
+                    else if(t.TicketStatusId == 5)
+                    {
+                        return 4;
+                    }
+                    else
+                    {
+                        return t.TicketStatusId;
+                    }
+                })
+                .ThenByDescending(t => t.TicketPriorityId)
+                .ToList();
 
             var ticketListDto = _mapper.Map<List<TicketListDto>>(tickets);
 

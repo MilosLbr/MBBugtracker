@@ -50,7 +50,23 @@ namespace MbBugtracker.Controllers
             var projectDetailsViewModel = _mapper.Map<ProjectDetailsViewModel>(project);
 
             //order 
-            projectDetailsViewModel.ProjectTickets = projectDetailsViewModel.ProjectTickets.OrderBy(t => t.TicketStatus.Id).ThenByDescending(t => t.TicketPriority.Id).ToList();
+            projectDetailsViewModel.ProjectTickets = projectDetailsViewModel.ProjectTickets
+                .OrderBy(t => {
+                    if (t.TicketStatus.Id == 2)
+                    {
+                        return 5;
+                    }
+                    else if (t.TicketStatus.Id == 5)
+                    {
+                        return 4;
+                    }
+                    else
+                    {
+                        return t.TicketStatus.Id;
+                    }
+                })
+                .ThenByDescending(t => t.TicketPriority.Id)
+                .ToList();
 
             return View(projectDetailsViewModel);
         }
