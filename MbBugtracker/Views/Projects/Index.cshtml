@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DataModels.Project>
+﻿@model IEnumerable<DataModels.ViewModels.ProjectDetailsViewModel>
+@using DataModels.EnumConstants
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +8,7 @@
 
 
 
-    <h1>Index</h1>
+    <h3>All my projects</h3>
 
     <p>
         <a asp-action="Create">Create New</a>
@@ -25,6 +26,9 @@
                     Status
                 </th>
                 <th>
+                    Progress
+                </th>
+                <th>
                     Developers assigned
                 </th>
             </tr>
@@ -34,7 +38,10 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ProjectName)
+                        <a asp-action="Details" asp-route-id="@item.Id">
+                            @Html.DisplayFor(modelItem => item.ProjectName)
+                        </a>
+                        
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Description)
@@ -43,16 +50,21 @@
                         @Html.DisplayFor(modelItem => item.ProjectStatus.StatusName)
                     </td>
                     <td>
-                        @foreach (var user in item.ProjectsAndUsers)
-                        {
-                            <li style="list-style-type:none;">@user.ApplicationUser.UserName</li>
-                        }
-
+                        <span title="Closed tickets" class="text-success">
+                            @item.ProjectTickets.Where(t => t.TicketStatus.Id == (int)EnumConstants.TicketStatuses.Closed).Count()
+                        </span>
+                        /
+                        <span title="Active tickets" class="text-danger">
+                            @item.ProjectTickets.Count()
+                        </span>
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @foreach (var user in item.AssignedDevelopers)
+                        {
+                            <li style="list-style-type:none;">
+                                @user.ApplicationUser.UserName
+                            </li>
+                        }
                     </td>
                 </tr>
             }

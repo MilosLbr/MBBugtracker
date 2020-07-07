@@ -33,7 +33,11 @@ namespace MbBugtracker.Controllers
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            return View(await _unitOfWork.Projects.GetAll());
+            var myProjects = await _unitOfWork.Projects.GetAll();
+
+            var myProjectsViewModel = _mapper.Map<IEnumerable<ProjectDetailsViewModel>>(myProjects);
+
+            return View(myProjectsViewModel);
         }
 
         // GET: Projects/Details/5
