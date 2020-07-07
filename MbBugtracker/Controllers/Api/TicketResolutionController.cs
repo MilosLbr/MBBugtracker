@@ -9,6 +9,7 @@ using DataModels.EnumConstants;
 using DTOs;
 using MbBugtracker.Data;
 using MbBugtracker.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,7 @@ namespace MbBugtracker.Controllers.Api
             _unitOfWork = unitOfWork;
         }
 
+                
         [HttpGet("{ticketId}")]
         public async Task<IActionResult> GetResolutionForTicket(int ticketId)
         {
@@ -45,6 +47,7 @@ namespace MbBugtracker.Controllers.Api
             return Ok(resolution);
         }
 
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         [HttpPost("{ticketId}")]
         public async Task<ActionResult> PostResolutionForTicket(int ticketId, TicketResolutionCommentDto ticketResolution)
         {

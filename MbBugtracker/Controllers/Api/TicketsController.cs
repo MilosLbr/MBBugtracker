@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MbBugtracker.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MbBugtracker.Controllers.Api
 {
@@ -58,6 +59,7 @@ namespace MbBugtracker.Controllers.Api
             return Ok(ticketListDto);
         }
 
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         [HttpPut("updateStatus")]
         public async Task<IActionResult> UpdateTicketStatus(TicketStatusUpdateDto ticketStatusUpdateDto)
         {

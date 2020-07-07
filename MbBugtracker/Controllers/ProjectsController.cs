@@ -12,9 +12,11 @@ using DataModels.ViewModels;
 using MbBugtracker.Services.Interfaces;
 using DTOs;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MbBugtracker.Controllers
 {
+
     public class ProjectsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -72,6 +74,7 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> Create()
         {
             ViewBag.projectStatuses = await _unitOfWork.ProjectStatuses.GetAll();
@@ -79,6 +82,7 @@ namespace MbBugtracker.Controllers
         }
 
         // POST: Projects/Create
+        [Authorize(Roles = "Admin,ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProjectName,Description")] Project project)
@@ -93,6 +97,7 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> Edit(int id)
         {
             var project = await _unitOfWork.Projects.GetById(id);
@@ -111,6 +116,7 @@ namespace MbBugtracker.Controllers
         }
 
         // POST: Projects/Edit/5
+        [Authorize(Roles = "Admin,ProjectManager")]
         [HttpPost]
         public async Task<IActionResult> Edit(int id, [FromBody]ProjectEditViewModel projectEditViewModel)
         {
@@ -151,6 +157,7 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Projects/Delete/5
+        [Authorize(Roles = "Admin,ProjectManager")]
         public async Task<IActionResult> Delete(int id)
         {
             var project = await _unitOfWork.Projects.GetById(id);
@@ -169,6 +176,7 @@ namespace MbBugtracker.Controllers
         }
 
         // POST: Projects/Delete/5
+        [Authorize(Roles = "Admin,ProjectManager")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

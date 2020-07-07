@@ -8,6 +8,7 @@ using DTOs;
 using MbBugtracker.Data;
 using MbBugtracker.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +48,8 @@ namespace MbBugtracker.Controllers.Api
 
         }
 
-        [HttpPost("{ticketId}")]
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
+        [HttpPost("{ticketId}")]        
         public async Task<IActionResult> PostCommentForTicket(int ticketId, TicketCommentCreateDto commentDto)
         {
             if (string.IsNullOrWhiteSpace(commentDto.Content))

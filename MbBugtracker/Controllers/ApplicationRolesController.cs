@@ -15,7 +15,7 @@ using MbBugtracker.Services.Interfaces;
 
 namespace MbBugtracker.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles ="Admin,ProjectManager")]
     public class ApplicationRolesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

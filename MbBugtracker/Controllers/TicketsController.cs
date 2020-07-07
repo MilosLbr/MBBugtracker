@@ -61,6 +61,7 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Tickets/Create
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public IActionResult Create()
         {            
             var viewModel = new TicketCreateEditViewModel();
@@ -72,9 +73,9 @@ namespace MbBugtracker.Controllers
         // POST: Tickets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public async Task<IActionResult> Create(TicketCreateEditViewModel ticket)
-        {            
-
+        {   
             if (ModelState.IsValid)
             {
                 var userId = _userManager.GetUserId(User);
@@ -97,6 +98,7 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Tickets/Edit/5
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -113,6 +115,7 @@ namespace MbBugtracker.Controllers
         }
 
         // POST: Tickets/Edit/5
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TicketCreateEditViewModel ticketViewModel)
@@ -144,6 +147,7 @@ namespace MbBugtracker.Controllers
         }
 
         // GET: Tickets/Delete/5
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         public async Task<IActionResult> Delete(int id)
         {
             var ticket = await _unitOfWork.Tickets.GetById(id);
@@ -162,6 +166,7 @@ namespace MbBugtracker.Controllers
         }
 
         // POST: Tickets/Delete/5
+        [Authorize(Roles = "Admin,ProjectManager,Developer")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

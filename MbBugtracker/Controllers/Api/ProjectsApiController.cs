@@ -33,6 +33,7 @@ namespace MbBugtracker.Controllers.Api
             _userManager = userManager;
         }
 
+        [Authorize(Roles = "Admin,ProjectManager")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateNewProject(ProjectCreateDto projectCreateDto)
         {
