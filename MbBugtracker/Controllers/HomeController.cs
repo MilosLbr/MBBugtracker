@@ -101,7 +101,7 @@ namespace MbBugtracker.Controllers
             var myProjectsDto = _mapper.Map<IEnumerable<ProjectDetailsDto>>(myProjects);
 
             // get tickets user created or the user is assigned to
-            var myTickets = await _unitOfWork.Tickets.Filter(t => t.ApplicationUserId == currentUser.Id || t.AssignedTo == currentUser.UserName).ToListAsync();
+            var myTickets = await _unitOfWork.Tickets.Filter(t => t.ApplicationUserId == currentUser.Id || t.AssignedTo == currentUser.UserName).OrderByDescending(t => t.DueDate).ToListAsync();
 
             var myTicketsDto = _mapper.Map<IEnumerable<TicketBasicInfoDto>>(myTickets);
 

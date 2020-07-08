@@ -125,6 +125,10 @@ body {
 .ticketListContainer .hiddenDate{
     display: none;
 }
+
+.dashboardCard .hiddenDate {
+    display: none;
+}
 .ticketStatusDiv {
     padding: 15px;
     border-radius: 12px;

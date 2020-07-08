@@ -7,10 +7,9 @@
 
 <h4 class="m-4 text-center">Welcome @User.Identity.Name</h4>
 
-<div class="row mb-4">
-
+<div class="row mb-5">
     <div class="dashboardCard col-md-6" id="overviewDiv">
-        <div class="cardHeader ">
+        <div class="cardHeader mb-2">
             My Tickets Overview
         </div>
             <div >
@@ -18,14 +17,21 @@
             </div>
     </div>
     <div class="dashboardCard col-md-6" id="myTicketsDiv">
-        <div class="cardHeader ">
+        <div class="cardHeader mb-2">
             My Tickets
         </div>
-        <div >
+        <div>
+            <table id="myTicketsTable" class="table  table-bordered table-striped no-footer">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Due date</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
-
-
 </div>
 
 <div class="row">
@@ -56,7 +62,5 @@
             </div>
         </div>
     </div>
-
-
 </div>
 

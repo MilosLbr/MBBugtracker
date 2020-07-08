@@ -1,4 +1,4 @@
-﻿let ticketTable = $("#ticketsForThisProject");
+﻿    let ticketTable = $("#ticketsForThisProject");
 let table = ticketTable.DataTable();
 
 function fillTableWithData(data) {

@@ -14,7 +14,6 @@
     }
     else
     {
-
         <div>
             <partial name="_DashboardPartial" />
         </div>
@@ -28,33 +27,24 @@
     <script>
         $(document).ready(() => {
             let model = @Html.Raw(Json.Serialize(Model));
-            
-            
 
             if (model != null) {
-                let allTickets = model.myTickets;   
-                
-                let closedTickets = allTickets.filter(t => t.ticketStatusId == 2).length;
-                let activeTickets = allTickets.filter(t => t.ticketStatusId != 2).length;
+                let ticketStatuses = {
+                    1: "Open",
+                    2: "Closed",
+                    3: "In progress",
+                    4: "To be tested",
+                    5: "Reopen"
+                }
+                let myTickets = model.myTickets;
 
-                let context = document.getElementById("doughnutChart").getContext("2d");
+                drawOverviewChart(myTickets);                
+                drawAllMyTicketsTable(myTickets, ticketStatuses);
 
-                var myChart = new Chart(context, {
-                    type: "doughnut",
-                    data: {
-                        labels: ["Closed", "Active"],
-                        datasets: [{
-                            data: [closedTickets, activeTickets],
-                            backgroundColor: [
-                                'rgba(66, 245, 164, 0.8)',
-                                'rgba(245, 66, 78, 0.8)'                                
-                            ]
-                        }]
-                    }
-                })
             }
         })
 
     </script>
-
+    <script src="~/js/Home/Index/drawOverviewChart.js"></script>
+    <script src="~/js/Home/Index/drawAllMyTicketsTable.js"></script>
 }
