@@ -11,10 +11,10 @@ namespace DataModels.ViewModels
         public string UserName { get; set; }
 
         public IEnumerable<ProjectDetailsDto> MyProjects { get; set; }
-        public IEnumerable<TicketListDto> MyTickets { get; set; }
+        public IEnumerable<TicketBasicInfoDto> MyTickets { get; set; }
 
-        public IEnumerable<TicketListDto> MyTicketsDueToday { get; set; }
-        public IEnumerable<TicketListDto> MyOverdueTickets { get; set; }
+        public IEnumerable<TicketBasicInfoDto> MyTicketsDueToday { get; set; }
+        public IEnumerable<TicketBasicInfoDto> MyOverdueTickets { get; set; }
 
     }
 }

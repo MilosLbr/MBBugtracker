@@ -1,0 +1,62 @@
+﻿@model DataModels.ViewModels.MyDashboardViewModel
+
+@{
+
+}
+
+
+<h4 class="m-4 text-center">Welcome @User.Identity.Name</h4>
+
+<div class="row mb-4">
+
+    <div class="dashboardCard col-md-6" id="overviewDiv">
+        <div class="cardHeader ">
+            My Tickets Overview
+        </div>
+            <div >
+                <canvas id="doughnutChart"></canvas>
+            </div>
+    </div>
+    <div class="dashboardCard col-md-6" id="myTicketsDiv">
+        <div class="cardHeader ">
+            My Tickets
+        </div>
+        <div >
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+
+    <div class="dashboardCard col-md-6" id="overviewDiv">
+        <div class="cardHeader ">
+            My Tickets Due Today
+        </div>
+        <div class="row">
+            <div class="col-6">
+
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+    </div>
+    <div class="dashboardCard col-md-6" id="overviewDiv">
+        <div class="cardHeader ">
+            My Overdue Tickets
+        </div>
+        <div class="row">
+            <div class="col-6">
+
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+

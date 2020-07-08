@@ -41,9 +41,14 @@ namespace MbBugtracker.Controllers
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
-            var myDashboardViewModel = await PrepareDashboardViewModel(currentUser);
+            if(currentUser != null)
+            {
+                var myDashboardViewModel = await PrepareDashboardViewModel(currentUser);
 
-            return View(myDashboardViewModel);
+                return View(myDashboardViewModel);
+            }
+            return View();
+
         }
 
         public IActionResult Privacy()
@@ -98,7 +103,7 @@ namespace MbBugtracker.Controllers
             // get tickets user created or the user is assigned to
             var myTickets = await _unitOfWork.Tickets.Filter(t => t.ApplicationUserId == currentUser.Id || t.AssignedTo == currentUser.UserName).ToListAsync();
 
-            var myTicketsDto = _mapper.Map<IEnumerable<TicketListDto>>(myTickets);
+            var myTicketsDto = _mapper.Map<IEnumerable<TicketBasicInfoDto>>(myTickets);
 
             // tickets due on this date
             var myTicketsDueToday = myTickets.Where(t => {
@@ -107,7 +112,7 @@ namespace MbBugtracker.Controllers
 
                 return result == 0 && t.TicketStatusId != (int)EnumConstants.TicketStatuses.Closed; // get only tickets that are not closed (status 2)
             });
-            var myTicketsDueTodayDto = _mapper.Map<IEnumerable<TicketListDto>>(myTicketsDueToday);
+            var myTicketsDueTodayDto = _mapper.Map<IEnumerable<TicketBasicInfoDto>>(myTicketsDueToday);
 
             // overdue tickets
             var myOverdueTickets = myTickets.Where(t =>
@@ -117,7 +122,7 @@ namespace MbBugtracker.Controllers
 
                 return result > 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed; 
             });
-            var myOverdueTicketsDto = _mapper.Map<IEnumerable<TicketListDto>>(myOverdueTickets);
+            var myOverdueTicketsDto = _mapper.Map<IEnumerable<TicketBasicInfoDto>>(myOverdueTickets);
 
             var myDashboardViewModel = new MyDashboardViewModel()
             {
