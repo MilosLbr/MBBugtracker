@@ -1,16 +1,96 @@
-﻿@{
+﻿@model DataModels.ViewModels.MyDashboardViewModel 
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    
-    @if (!User.Identity.IsAuthenticated)
-    {
-     <partial name="_LoginFormPartial" />
-    }
-    else
-    {
-        <p>welcome @User.Identity.Name</p>
-    }
+    <div>
 
-</div>
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <div class="text-center">
+                <partial name="_LoginFormPartial" />
+            </div>
+        }
+        else
+        {
+            <h4 class="m-4 text-center">Welcome @User.Identity.Name</h4>
+
+            <div class="row">
+
+                <div class="dashboardCard col-md-6" id="overviewDiv">
+                    <div class="cardHeader ">
+                        My Overview
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+
+                        </div>
+                        <div class="col-6">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardCard col-md-6" id="overviewDiv">
+                    <div class="cardHeader ">
+                        My Tickets
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+
+                        </div>
+                        <div class="col-6">
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row">
+
+                <div class="dashboardCard col-md-6" id="overviewDiv">
+                    <div class="cardHeader ">
+                        My Tickets Due Today
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+
+                        </div>
+                        <div class="col-6">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboardCard col-md-6" id="overviewDiv">
+                    <div class="cardHeader ">
+                        My Overdue Tickets
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+
+                        </div>
+                        <div class="col-6">
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        }
+
+    </div>
+
+
+@section scripts{
+
+    <script>
+
+
+    </script>
+
+}

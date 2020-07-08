@@ -10,6 +10,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using DataModels;
 using DataModels.ViewModels;
+using MbBugtracker.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using DTOs;
+using DataModels.EnumConstants;
+using Microsoft.VisualBasic;
 
 namespace MbBugtracker.Controllers
 {
@@ -18,16 +24,26 @@ namespace MbBugtracker.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger, SignInManager<ApplicationUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _logger = logger;
             _signInManager = signInManager;
+            _userManager = userManager;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var myDashboardViewModel = await PrepareDashboardViewModel(currentUser);
+
+            return View(myDashboardViewModel);
         }
 
         public IActionResult Privacy()
@@ -70,6 +86,50 @@ namespace MbBugtracker.Controllers
 
             // If we got this far, something failed, redisplay form
             return View("Index");
+        }
+
+        private async Task<MyDashboardViewModel> PrepareDashboardViewModel(ApplicationUser currentUser)
+        {
+            // get projects user created or the user is assigned to
+            var myProjects = await _unitOfWork.Projects.Filter(p => p.ApplicationUserId == currentUser.Id || p.ProjectsAndUsers.Where(pau => pau.ApplicationUserId == currentUser.Id).Count() > 0).ToListAsync();
+
+            var myProjectsDto = _mapper.Map<IEnumerable<ProjectDetailsDto>>(myProjects);
+
+            // get tickets user created or the user is assigned to
+            var myTickets = await _unitOfWork.Tickets.Filter(t => t.ApplicationUserId == currentUser.Id || t.AssignedTo == currentUser.UserName).ToListAsync();
+
+            var myTicketsDto = _mapper.Map<IEnumerable<TicketListDto>>(myTickets);
+
+            // tickets due on this date
+            var myTicketsDueToday = myTickets.Where(t => {
+                var now = DateTime.Now;
+                var result = DateTime.Compare(now.Date, t.DueDate.Date);
+
+                return result == 0 && t.TicketStatusId != (int)EnumConstants.TicketStatuses.Closed; // get only tickets that are not closed (status 2)
+            });
+            var myTicketsDueTodayDto = _mapper.Map<IEnumerable<TicketListDto>>(myTicketsDueToday);
+
+            // overdue tickets
+            var myOverdueTickets = myTickets.Where(t =>
+            {
+                var now = DateTime.Now;
+                var result = DateTime.Compare(now.Date, t.DueDate.Date);
+
+                return result > 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed; 
+            });
+            var myOverdueTicketsDto = _mapper.Map<IEnumerable<TicketListDto>>(myOverdueTickets);
+
+            var myDashboardViewModel = new MyDashboardViewModel()
+            {
+                Id = currentUser.Id,
+                UserName = currentUser.UserName,
+                MyProjects = myProjectsDto,
+                MyTickets = myTicketsDto,
+                MyTicketsDueToday = myTicketsDueTodayDto,
+                MyOverdueTickets = myOverdueTicketsDto
+            };
+
+            return myDashboardViewModel;
         }
     }
 }
