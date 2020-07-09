@@ -8,27 +8,27 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form  id="projectForm">            
+        <form id="projectForm">
             <div class="form-group">
                 <label for="projectName" class="control-label">Project name:</label>
-                <input  class="form-control" id="projectName" autocomplete="off"/>
+                <input class="form-control" id="projectName" autocomplete="off" />
             </div>
             <div class="form-group">
                 <label for="description" class="control-label">Description:</label>
-                <input class="form-control" id="description" autocomplete="off"/>
+                <input class="form-control" id="description" autocomplete="off" />
             </div>
             <div class="form-group">
                 <label for="selectUsers" class="control-label">Select Developers for this project:</label>
-                <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" placeholder="Search developers..." autocomplete="off"/>
+                <input type="text" class="form-control typeahead" name="selectUsers" id="selectUsers" value="" placeholder="Search developers..." autocomplete="off" />
             </div>
             <div class="form-group">
                 <label for="projectStatuses">Project Status:</label>
                 @Html.DropDownList("ProjectStatusId",
-                new SelectList(ViewBag.projectStatuses,"Id", "StatusName",1),
+                new SelectList(ViewBag.projectStatuses, "Id", "StatusName", 1),
                 null,
                    new
                    {
-                       @class="form-control",
+                       @class = "form-control",
                        id = "projectStatuses"
                    }
                 )
@@ -45,7 +45,7 @@
         <ul id="selectedDevelopers">
         </ul>
     </div>
-    
+
 </div>
 
 <div>
@@ -53,58 +53,14 @@
 </div>
 
 @section Scripts {
-   @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        let selectedUserIds = [];
+
         $(document).ready(function () {
-            let selectedUserIds = [];
 
-            // bloodhound for typeahead
-            let appUsers = new Bloodhound({
-                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-                queryTokenizer: Bloodhound.tokenizers.whitespace,
-                remote: {
-                    url: '/api/users?userName=%QUERY',
-                    wildcard: '%QUERY'
-                }
-            });
-
-
-            // typeahead plugin box
-            $("#selectUsers").typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 1
-            }, {
-                name: 'users',
-                display: "userName",
-                source: appUsers,
-                limit: 10
-            }).on("typeahead:select", function (e, user) {
-
-                if (selectedUserIds.includes(user.id)) {
-                    $("#selectUsers").typeahead("val", "");
-                    toastr.error("Already added!");
-                    return;
-                }
-
-                let listItem = document.createElement("li")
-                let removeButton = document.createElement("button")
-                listItem.classList.add("d-flex", "p-2", "justify-content-between", "align-items-center")
-                listItem.innerText = user.userName;
-                removeButton.setAttribute("data-id", user.id)
-                removeButton.setAttribute("data-userName", user.userName)
-                removeButton.classList.add("btn", "btn-danger", "removeBtn")
-                removeButton.innerText = "Remove";
-
-                listItem.appendChild(removeButton);
-
-                $("#selectedDevelopers").append(listItem);
-
-                selectedUserIds.push(user.id);
-
-                $("#selectUsers").typeahead("val", "");
-            });
+            typeAheadForCreateForm();
 
             // remove developer from list
             $("#selectedDevelopers").on("click", ".removeBtn", function () {
@@ -121,32 +77,11 @@
             // submit form
             $("#projectForm").on("submit", function () {
                 event.preventDefault(); //prevent form submit with reload
-
-                let projectToCreate = {}; // dto
-
-                projectToCreate["projectName"] = $("#projectName").val();
-                projectToCreate["description"] = $("#description").val();
-                projectToCreate["selectedUserIds"] = selectedUserIds;
-                projectToCreate["projectStatusId"] = $("#projectStatuses").val();
-
-                $.ajax({
-                    url: "/api/projects/create",
-                    method: "POST",
-                    data: JSON.stringify(projectToCreate),
-                    contentType: 'application/json',
-                }).done(data => {
-                    console.log(data, ' returned ')
-                    // reset input fields
-                    $("#projectName").val("");
-                    $("#description").val("");
-                    $("#selectedDevelopers").html("");
-
-                    toastr.success('Inserted new project!', 'Success!')
-                }).fail(er => {
-                    toastr.error(er.responseJSON);
-                })
+                submitCreateForm();
             })
 
         })
     </script>
+    <script src="~/js/Projects/Create/typeAheadForCreateForm.js"></script>
+    <script src="~/js/Projects/Create/submitCreateForm.js"></script>
 }
