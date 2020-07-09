@@ -38,13 +38,16 @@
                 }
                 let myTickets = model.myTickets;
 
-                drawOverviewChart(myTickets);                
+                drawOverviewChart(myTickets);
                 drawAllMyTicketsTable(myTickets, ticketStatuses);
-
+                drawMyTicketsDueTodayTable(myTickets, ticketStatuses);
+                drawOverdueTicketsTable(myTickets, ticketStatuses);
             }
         })
 
     </script>
     <script src="~/js/Home/Index/drawOverviewChart.js"></script>
     <script src="~/js/Home/Index/drawAllMyTicketsTable.js"></script>
+    <script src="~/js/Home/Index/drawMyTicketsDueTodayTable.js"></script>
+    <script src="~/js/Home/Index/drawOverdueTicketsTable.js"></script>
 }
