@@ -33,7 +33,8 @@ namespace MbBugtracker.Controllers
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            var myProjects = await _unitOfWork.Projects.GetAll();
+            var currentUser = await _userManager.GetUserAsync(User);
+            var myProjects = await _unitOfWork.Projects.GetProjectsForCurrentUser(currentUser);
 
             var myProjectsViewModel = _mapper.Map<IEnumerable<ProjectDetailsViewModel>>(myProjects);
 

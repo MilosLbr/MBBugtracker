@@ -8,5 +8,6 @@ namespace MbBugtracker.Services.Interfaces
 {
     public interface IProjectRepository : IRepository<Project>
     {
+        Task<IEnumerable<Project>> GetProjectsForCurrentUser(ApplicationUser currentUser);
     }
 }

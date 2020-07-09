@@ -96,12 +96,12 @@ namespace MbBugtracker.Controllers
         private async Task<MyDashboardViewModel> PrepareDashboardViewModel(ApplicationUser currentUser)
         {
             // get projects user created or the user is assigned to
-            var myProjects = await _unitOfWork.Projects.Filter(p => p.ApplicationUserId == currentUser.Id || p.ProjectsAndUsers.Where(pau => pau.ApplicationUserId == currentUser.Id).Count() > 0).ToListAsync();
+            var myProjects = await _unitOfWork.Projects.GetProjectsForCurrentUser(currentUser);
 
             var myProjectsDto = _mapper.Map<IEnumerable<ProjectDetailsDto>>(myProjects);
 
             // get tickets user created or the user is assigned to
-            var myTickets = await _unitOfWork.Tickets.Filter(t => t.ApplicationUserId == currentUser.Id || t.AssignedTo == currentUser.UserName).OrderByDescending(t => t.DueDate).ToListAsync();
+            var myTickets = await _unitOfWork.Tickets.GetTicketsForCurrentUser(currentUser);
 
             var myTicketsDto = _mapper.Map<IEnumerable<TicketBasicInfoDto>>(myTickets);
 

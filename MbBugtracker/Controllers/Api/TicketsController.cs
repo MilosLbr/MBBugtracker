@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DataModels.ViewModels;
 using DTOs;
-using MbBugtracker.Data;
 using Microsoft.AspNetCore.Http;
 using DataModels;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +32,10 @@ namespace MbBugtracker.Controllers.Api
         
         public async Task<IActionResult> GetTickets()
         {
-            var tickets = await _unitOfWork.Tickets.GetAll();
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var tickets = await _unitOfWork.Tickets.GetTicketsForCurrentUsersProjects(currentUser);
+
             // order by status then by priority
             tickets = tickets
                 .OrderBy(t => {
