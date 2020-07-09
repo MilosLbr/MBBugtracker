@@ -58,6 +58,9 @@ function createTable() {
         ],
         "columnDefs": [
             { "width": "200px", "targets": 0 }
-        ]
+        ],
+        rowGroup: {
+            dataSrc: "project.projectName"
+        }
     });
 }
