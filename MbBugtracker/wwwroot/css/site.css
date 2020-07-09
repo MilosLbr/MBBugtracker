@@ -171,3 +171,9 @@ div#postCommentDiv{
     border-radius: 12px;
     background-color: #ededed;
 }
+
+@media only screen and (min-width:992px){
+    .dashboardRow{
+        height: 375px;
+    }
+}
