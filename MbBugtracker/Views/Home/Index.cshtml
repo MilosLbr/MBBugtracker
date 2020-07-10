@@ -43,9 +43,13 @@
                 drawMyTicketsDueTodayTable(myTickets, ticketStatuses);
                 drawOverdueTicketsTable(myTickets, ticketStatuses);
             }
+
+            let loginBtn = $("#loginAsDemoUser");
+            loginBtn.on("click", loginAsDemoUser);
         })
 
     </script>
+    <script src="~/js/Home/Index/loginAsDemoUser.js"></script>
     <script src="~/js/Home/Index/drawOverviewChart.js"></script>
     <script src="~/js/Home/Index/drawAllMyTicketsTable.js"></script>
     <script src="~/js/Home/Index/drawMyTicketsDueTodayTable.js"></script>

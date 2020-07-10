@@ -93,6 +93,37 @@ namespace MbBugtracker.Controllers
             return View("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> LoginUserWithAjax([FromBody]HomeLoginViewModel loginModel, string returnUrl = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            if (ModelState.IsValid)
+            {
+                // This doesn't count login failures towards account lockout
+                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, loginModel.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    return LocalRedirect(returnUrl);
+                }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View("Index");
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View("Index");
+        }
+
         private async Task<MyDashboardViewModel> PrepareDashboardViewModel(ApplicationUser currentUser)
         {
             // get projects user created or the user is assigned to
