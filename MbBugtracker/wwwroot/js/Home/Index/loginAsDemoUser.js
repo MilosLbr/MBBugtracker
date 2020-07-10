@@ -1,5 +1,5 @@
 ﻿function loginAsDemoUser() {
-    console.log("Clicked")
+
     let postData = {
         "email": "demouser@email.com",
         "password": "demopassword",
@@ -19,7 +19,6 @@
             
         })
         .fail(er => {
-            console.log(er)
             if (er.status == 200) {
                 window.location.reload();
             }
