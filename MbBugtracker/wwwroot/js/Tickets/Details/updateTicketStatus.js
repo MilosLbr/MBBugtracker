@@ -29,7 +29,11 @@ function updateTicketStatus(ticketId) {
                 prependActivityLogList(data.ticketActivityLogDto);
             })
             .fail((er) => {
-                toastr.error("An error has ocured!");
+                if (er.status == 403) {
+                    toastr.error("You are forbidden to perform this action!");
+                } else {
+                    toastr.error("An error has ocured!");
+                }
             })
     }
 

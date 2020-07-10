@@ -18,6 +18,10 @@
             window.location.reload();
         })
         .fail((er) => {
-            toastr.error(er.responseText);
+            if (er.status == 403) {
+                toastr.error("You are forbidden to perform this action!");
+            } else {
+                toastr.error("An error has ocured!");
+            }
         });
 }
