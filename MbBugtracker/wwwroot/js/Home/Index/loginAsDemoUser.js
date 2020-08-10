@@ -1,4 +1,6 @@
 ﻿function loginAsDemoUser() {
+    $("#loginAsDemoUser").attr("disabled", true);
+    $("#loadingGifContainer").css("display", "inline");
 
     let postData = {
         "email": "demouser@email.com",

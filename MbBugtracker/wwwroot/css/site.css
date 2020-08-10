@@ -177,3 +177,16 @@ div#postCommentDiv{
         height: 375px;
     }
 }
+
+.demoLoginContainer{
+    width: 80%;
+    margin : 0 auto;
+}
+
+
+#loadingGifContainer {
+    display: none;
+}
+#loadingGifContainer img{
+    max-width:30px;
+}
