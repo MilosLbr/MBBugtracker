@@ -2,6 +2,8 @@
 function createTable() {
 
     ticketTable = $("#ticketsTable").DataTable({
+
+        responsive: true,
         ajax: {
             "url": "/api/tickets",
             "dataSrc": ""
@@ -57,7 +59,7 @@ function createTable() {
             { "data": "assignedTo" }
         ],
         "columnDefs": [
-            { "width": "200px", "targets": 0 }
+            //{ "width": "200px", "targets": 0 }
         ],
         rowGroup: {
             dataSrc: "project.projectName"
