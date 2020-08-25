@@ -66,15 +66,15 @@
     </div>
 </div>
 
-<div id="filterButtons">
-    <div class="d-flex justify-content-sm-around">
-        <button class="btn btn-warning" id="getActiveTicketsBtn">
+<div id="filterButtons" class="container">
+    <div class=" row justify-content-sm-around">
+        <button class="btn btn-warning col-sm-2 mb-1 " id="getActiveTicketsBtn">
             Active (@Model.ProjectTickets.Where(t => t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed).Count())
         </button>
-        <button class="btn btn-success" id="getClosedTicketsBtn">
+        <button class="btn btn-success col-sm-2 mb-1" id="getClosedTicketsBtn">
             Closed (@Model.ProjectTickets.Where(t => t.TicketStatus.Id == (int)EnumConstants.TicketStatuses.Closed).Count())
         </button>
-        <button class="btn btn-danger" id="getOverdueTicketsBtn">
+        <button class="btn btn-danger col-sm-2 mb-1" id="getOverdueTicketsBtn">
             Overdue (@Model.ProjectTickets.Where(t =>
                        {
                            var now = DateTime.Now;
@@ -83,7 +83,7 @@
                            return result > 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed; // count only tickets that are not closed (status 2)
                        }).Count())
         </button>
-        <button title="Due on: @DateTime.Now.AddDays(7).ToShortDateString()" class="btn btn-info" id="getTikcetsDueInSeven">
+        <button title="Due on: @DateTime.Now.AddDays(7).ToShortDateString()" class="btn btn-info col-sm-2 mb-1" id="getTikcetsDueInSeven">
             Due in next 7 days (@Model.ProjectTickets.Where(t =>
                                 {
                                 var now = DateTime.Now;
@@ -94,7 +94,7 @@
                                 return compareNow >= 0 && compareSevenDays <= 0 && t.TicketStatus.Id != (int)EnumConstants.TicketStatuses.Closed;
                                 }).Count())
         </button>
-        <button class="btn btn-primary" id="getAllTicketsBtn">
+        <button class="btn btn-primary col-sm-2 mb-1" id="getAllTicketsBtn">
             All tickets (@Model.ProjectTickets.Count())
         </button>
     </div>
@@ -105,13 +105,13 @@
     <table id="ticketsForThisProject" class="table table-striped ticketListContainer">
         <thead class="table-dark table-bordered">
             <tr>
-                <th>Ticket</th>
+                <th data-priority="1">Ticket</th>
                 <th>Reported by</th>
-                <th>Priority</th>
+                <th data-priority="2">Priority</th>
                 <th>Status</th>
                 <th>Type</th>
                 <th>Created on</th>
-                <th>Due date</th>
+                <th data-priority="3">Due date</th>
             </tr>
         </thead>
     </table>

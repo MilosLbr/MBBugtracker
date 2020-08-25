@@ -5,6 +5,7 @@ function fillTableWithData(data) {
     table.destroy();
 
     table = ticketTable.DataTable({
+        responsive:true,
         data: data,
         aaSorting: [],
         columns: [
@@ -55,7 +56,7 @@ function fillTableWithData(data) {
             }
         ],
         "columnDefs": [
-            { "width": "200px", "targets": 0 }
+            { className: "wideTd-lg", "targets": 0 }
         ]
     });
 }

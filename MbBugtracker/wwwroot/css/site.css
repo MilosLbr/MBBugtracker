@@ -190,3 +190,18 @@ div#postCommentDiv{
 #loadingGifContainer img{
     max-width:30px;
 }
+
+@media(min-width: 768px){
+    .wideTd-lg {
+        min-width: 200px !important; /*wide title column on larger screens*/
+        max-width: 200px !important;
+    }
+}
+
+@media(min-width: 1250px){
+
+    .ticketListContainer {
+        min-width: 1230px;
+    }
+}
+

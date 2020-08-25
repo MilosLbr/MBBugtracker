@@ -59,7 +59,7 @@ function createTable() {
             { "data": "assignedTo" }
         ],
         "columnDefs": [
-            //{ "width": "200px", "targets": 0 }
+            { className: "wideTd-lg", "targets": 0 }
         ],
         rowGroup: {
             dataSrc: "project.projectName"
